@@ -7,7 +7,7 @@ import { computerMove } from "@/lib/computerMove";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }
 ) {
   try {
     const user = await currentUser();

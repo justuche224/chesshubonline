@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }
 ) {
   try {
     console.log("fired ai game move for player route");
