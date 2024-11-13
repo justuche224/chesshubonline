@@ -6,7 +6,7 @@ import { pusherSever } from "@/lib/pusher";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params  }
 ) {
   try {
     console.log("fired move route");
