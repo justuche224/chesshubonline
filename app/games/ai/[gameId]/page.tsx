@@ -3,7 +3,7 @@ import { currentUser } from "@/lib/auth";
 import GamePage from "./GamePage";
 import { UserWithColor } from "@/types";
 
-const page = async ({ params }: { params: { gameId: string } }) => {
+const page = async ({ params }) => {
   const { gameId } = await params;
   const user = await currentUser();
   // console.log(user);
