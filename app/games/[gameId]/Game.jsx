@@ -4,13 +4,13 @@ import Image from "next/image";
 import { User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Chessgame from "./Chessgame";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const GamePage = ({ whitePlayer, blackPlayer, currentPlayer, initialGame }) => {
   const [status, setStatus] = useState({});
   const [boardWidth, setBoardWidth] = useState(0);
 
-  const router = useRouter();
+  // const router = useRouter();
 
   // Calculate optimal board size based on viewport
   useEffect(() => {
@@ -115,11 +115,11 @@ const PlayerInfo = ({ player, currentPlayer }) => {
   );
 };
 
-const ActionButton = ({ icon, text }) => (
-  <button className="flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">
-    {icon}
-    <span className="text-xs">{text}</span>
-  </button>
-);
+// const ActionButton = ({ icon, text }) => (
+//   <button className="flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">
+//     {icon}
+//     <span className="text-xs">{text}</span>
+//   </button>
+// );
 
 export default GamePage;

@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Chess } from "chess.js";
+import { Chess, Move } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { pusherClient } from "@/lib/pusher";
 import pieces from "./pieces";
-import { sendMoveToServer } from "./_helpers/sendMoveToServer";
-import { highlightAvailableMoves } from "./_helpers/highlightAvailableMoves";
 
 import {
   mergeStyles,
@@ -20,37 +17,45 @@ import {
   staleStyles,
 } from "./square-styles";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { AIType, GameWithAi } from "@prisma/client";
+import { UserWithColor } from "@/types";
+import { pusherClient } from "@/lib/pusher";
+
+type GameWithAiProps = {
+  onStatusChange: (status: string) => void,
+  initialGame: GameWithAi,
+  player: UserWithColor,
+  currentPlayer: UserWithColor,
+  aiType: AIType,
+};
 
 // white, black and current player should be an object with properties: id, username and color
-export default ({
+const ChessGame = ({
   onStatusChange,
   initialGame,
-  whitePlayer,
-  blackPlayer,
+  player,
   currentPlayer,
-}) => {
+  aiType,
+}: GameWithAiProps) => {
   const [game, setGame] = useState(new Chess(initialGame.fen));
-  const [gameStatus, setGameStatus] = useState({});
+  const [gameStatus, setGameStatus] = useState({
+    gameOver: initialGame.gameOver,
+  });
   const [availableMoves, setAvailableMoves] = useState([]);
   const [selectedSquare, setSelectedSquare] = useState("");
   const [rightClickedSquares, setRightClickedSquares] = useState([]);
   const [promotionMoves, setPromotionMoves] = useState([]);
+  const [isAIThinking, setIsAIThinking] = useState(false);
+  const [isMoveInProgress, setIsMoveInProgress] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [gameWinner, setGameWinner] = useState("b");
 
   const lastMove = useRef(null);
 
-  const router = useRouter();
-
   useEffect(() => {
-    if (!whitePlayer.id || !blackPlayer.id) return;
+    console.log(game.isGameOver());
 
-    toast.info(`You are ${currentPlayer.color === "w" ? "White" : "Black"}`);
-  }, [currentPlayer, whitePlayer, blackPlayer]);
-
-  useEffect(() => {
     if (game.isGameOver()) {
       if (game.isDraw()) {
         setGameOverMessage("Draw!");
@@ -62,12 +67,28 @@ export default ({
       }
       setIsGameOver(true);
     }
-  }, [game.isGameOver()]);
+  }, [game]);
+
+  useEffect(() => {
+    if (!player.id) return;
+
+    toast.info(`You are ${currentPlayer.color === "w" ? "White" : "Black"}`);
+  }, [player]);
+
+  useEffect(() => {
+    if (
+      game.turn() !== player.color &&
+      !initialGame.gameOver &&
+      !isMoveInProgress
+    ) {
+      makeAIMove();
+    }
+  }, [game.turn(), isMoveInProgress]);
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`game-${initialGame.id}`);
 
-    channel.bind("move", (data) => {
+    channel.bind("ai-move", (data) => {
       const { move, fen } = data;
 
       // Ignore the move if it's the same as the last move made by the current player
@@ -82,6 +103,68 @@ export default ({
       pusherClient.unsubscribe(`game-${initialGame.id}`);
     };
   }, [initialGame.id, game]);
+
+  const makeAIMove = async () => {
+    if (gameStatus.gameOver) return;
+    setIsAIThinking(true);
+
+    try {
+      const response = await fetch(`/api/games/ai/${initialGame.id}/move/ai`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aiType }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        toast.error(`AI Move failed: ${error}`);
+        return;
+      }
+      toast.success("ai move success");
+    } catch (error) {
+      console.error("AI move error:", error);
+      toast.error("AI failed to make a move");
+    } finally {
+      setIsAIThinking(false);
+    }
+  };
+
+  const sendMoveToServer = async (move) => {
+    setIsMoveInProgress(true); // Start move-in-progress tracking
+    try {
+      const response = await fetch(`/api/games/ai/${initialGame.id}/move`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ move, playerId: currentPlayer.id }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        toast.error(`Move failed: ${error}`);
+        return;
+      }
+      toast.success("Move success");
+    } catch (error) {
+      console.error("Failed to send move:", error);
+      toast.error("Network error. Please try again.");
+    } finally {
+      setIsMoveInProgress(false); // Reset move-in-progress tracking
+    }
+  };
+
+  function highlightAvailableMoves(square) {
+    setRightClickedSquares([]);
+
+    const isPieceHighlightable =
+      game.get(square)?.color == game.turn() && square != selectedSquare;
+
+    setSelectedSquare(isPieceHighlightable ? square : "");
+    setAvailableMoves(
+      isPieceHighlightable ? game.moves({ square, verbose: true }) : []
+    );
+
+    return isPieceHighlightable;
+  }
 
   function onSquareClick(square) {
     if (gameStatus.gameOver) return;
@@ -138,11 +221,11 @@ export default ({
   }
 
   function handleGameStatusUpdate() {
-    const previousPlayer = game.turn() == "w" ? "Black" : "White";
-    const currentPlayer = game.turn() == "w" ? "White" : "Black";
+    const previousPlayer = game.turn() === "w" ? "Black" : "White";
+    const currentPlayer = game.turn() === "w" ? "White" : "Black";
 
     let status = {
-      gameOver: true,
+      gameOver: false,
       history: game.history({ verbose: true }),
       gameState: game.isCheckmate()
         ? "checkmate"
@@ -157,13 +240,14 @@ export default ({
         : game.isDraw()
         ? "50-move rule"
         : promotionMoves.length > 0
-        ? `promote`
+        ? "promote"
         : "normal",
     };
 
     switch (status.gameState) {
       case "checkmate":
         status.message = `${previousPlayer} wins by Checkmate`;
+        status.gameOver = true;
         status.winner = game.turn();
         break;
       case "in check":
@@ -172,18 +256,22 @@ export default ({
       case "stalemate":
         status.message =
           "The game is a draw by Stalemate. Neither player can make a valid move.";
+        status.gameOver = true;
         break;
       case "insufficient material":
         status.message =
           "The game is a draw due to Insufficient Material. Neither side can force a checkmate.";
+        status.gameOver = true;
         break;
       case "threefold repetition":
         status.message =
           "The game is a draw by threefold repetition. The same position has occurred three times, leading to an automatic draw.";
+        status.gameOver = true;
         break;
       case "50-move rule":
         status.message =
           "The game is a draw by the 50-Move Rule. 50 moves passed without a pawn move or capture.";
+        status.gameOver = true;
         break;
       case "promote":
         status.message = `${currentPlayer}'s pawn has reached the last rank! Promote to continue.`;
@@ -227,25 +315,11 @@ export default ({
   return (
     <>
       {isGameOver && (
-        <div className="z-[9999] fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm text-white">
-          <div className="max-w-md w-[90%] p-8 bg-gray-800 rounded-lg shadow-lg text-center space-y-4">
-            <h2 className="text-3xl font-bold">Game Over!</h2>
-            <p className="text-lg">
-              {gameWinner === "w" ? whitePlayer.username : blackPlayer.username}{" "}
-              wins by {gameStatus.gameState}
-            </p>
-            <button
-              className="mt-4 px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 rounded-md"
-              onClick={() => {
-                router.push("/game/new");
-              }}
-            >
-              Play Again
-            </button>
-          </div>
+        <div className="z-[9999] fixed top-0 left-0 w-screen h-[100svh] bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center text-white">
+          <h2> Game Over!</h2>
+          <p>{gameWinner == player.color ? player.username : aiType} wins</p>
         </div>
       )}
-
       <div className="mx-auto">
         <Chessboard
           id="chessboard"
@@ -308,3 +382,5 @@ export default ({
     </>
   );
 };
+
+export default ChessGame;

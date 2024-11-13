@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/games/ai/[gameId]/MovesDisplay.jsx"
+    "app/games/ai/[gameId]/MovesDisplay.jsx",
+    "app/games/ai/[gameId]/Chessgame.jsx"
   ],
   "exclude": ["node_modules"]
 }

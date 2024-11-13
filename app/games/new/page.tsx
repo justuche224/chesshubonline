@@ -27,10 +27,10 @@ const page = async () => {
           <TabsTrigger value="ai">Play with AI</TabsTrigger>
         </TabsList>
         <TabsContent value="player">
-          <UserList otherUsers={otherUsers} userId={user.id!!} />
+          <UserList otherUsers={otherUsers} userId={user.id} />
         </TabsContent>
         <TabsContent value="ai">
-          <AIList userId={user.id!!} />
+          <AIList userId={user.id} />
         </TabsContent>
       </Tabs>
     </div>

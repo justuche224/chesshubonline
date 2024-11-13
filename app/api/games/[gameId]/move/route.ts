@@ -53,7 +53,7 @@ export async function POST(
 
     try {
       // Begin transaction to update the game and create a move.
-      const updatedGame = await db.$transaction([
+      await db.$transaction([
         db.game.update({
           where: { id: gameId },
           data: {

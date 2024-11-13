@@ -50,7 +50,7 @@ export async function POST(
     const nextPlayer = "AI";
 
     try {
-      const updatedGame = await db.$transaction([
+      await db.$transaction([
         db.gameWithAi.update({
           where: { id: gameId },
           data: {

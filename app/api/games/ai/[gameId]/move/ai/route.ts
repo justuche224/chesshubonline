@@ -49,7 +49,7 @@ export async function POST(
       const isGameOver = chessInstance.isGameOver();
       const updatedFEN = chessInstance.fen();
 
-      const updatedGame = await db.$transaction([
+      await db.$transaction([
         db.gameWithAi.update({
           where: { id: gameId },
           data: {

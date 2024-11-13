@@ -266,6 +266,7 @@ const Chessgame = ({
               {gameWinner === "w" ? whitePlayer.username : blackPlayer.username}{" "}
               wins by {gameStatus.gameState}
             </p>
+            <p>{gameOverMessage}</p>
             <button
               className="mt-4 px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 rounded-md"
               onClick={() => {
