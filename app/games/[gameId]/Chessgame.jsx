@@ -232,25 +232,25 @@ const Chessgame = ({
     return status;
   }
 
-  function renderPieceCapturedBy(color) {
-    const capturedPieces = game
-      .history({ verbose: true })
-      ?.filter((move) => move.captured && move.color == color);
-
-    return (
-      <div className="captured-container w-full bg-slate-500/70 rounded shadow-lg my-2 mx-auto flex flex-wrap justify-center items-center">
-        {capturedPieces.map(
-          (move) => pieces[(color == "w" ? "b" : "w") + move.captured]
-        )}
-
-        {capturedPieces.length == 0 && (
-          <p className="text-sm p-2">
-            Captured {color == "w" ? "black" : "white"} pieces will appear here.
-          </p>
-        )}
-      </div>
-    );
-  }
+  // function renderPieceCapturedBy(color) {
+//     const capturedPieces = game
+//       .history({ verbose: true })
+//       ?.filter((move) => move.captured && move.color == color);
+// 
+//     return (
+//       <div className="captured-container w-full bg-slate-500/70 rounded shadow-lg my-2 mx-auto flex flex-wrap justify-center items-center">
+//         {capturedPieces.map(
+//           (move) => pieces[(color == "w" ? "b" : "w") + move.captured]
+//         )}
+// 
+//         {capturedPieces.length == 0 && (
+//           <p className="text-sm p-2">
+//             Captured {color == "w" ? "black" : "white"} pieces will appear here.
+//           </p>
+//         )}
+//       </div>
+//     );
+//   }
 
   const gameBoard = game.board().flat();
   const currentPlayerKing = gameBoard.find(
