@@ -36,7 +36,7 @@ const UserList = ({ otherUsers, userId }: UserListProps) => {
       if (res.ok) {
         toast.success("Game created! redirecting..");
         const game = await res.json();
-        window.location.href = `/game/${game.id}`; // Redirect to the game page
+        window.location.href = `/games/${game.id}`; // Redirect to the game page
       } else {
         console.error("Failed to create a game");
       }

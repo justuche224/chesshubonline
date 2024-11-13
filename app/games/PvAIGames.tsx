@@ -15,7 +15,7 @@ const PvPAiGames = ({ userGamesWithAi }: GameAiHomeProps) => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Games</h1>
         <Button variant="secondary">
-          <Link href={"/game/new"}>New Game</Link>
+          <Link href={"/games/new"}>New Game</Link>
         </Button>
       </div>
       {userGamesWithAi.length > 0 ? (

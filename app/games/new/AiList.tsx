@@ -79,7 +79,7 @@ const AIList = ({ userId }: AIOpponentListProps) => {
       if (res.ok) {
         toast.success("Game created! Redirecting...");
         const game = await res.json();
-        window.location.href = `/game/ai/${game.id}`;
+        window.location.href = `/games/ai/${game.id}`;
       }
     } catch (error) {
       console.error("Error starting AI match:", error);
