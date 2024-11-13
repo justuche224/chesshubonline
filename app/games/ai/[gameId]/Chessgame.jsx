@@ -21,14 +21,6 @@ import { AIType, GameWithAi } from "@prisma/client";
 import { UserWithColor } from "@/types";
 import { pusherClient } from "@/lib/pusher";
 
-type GameWithAiProps = {
-  onStatusChange: (status: string) => void,
-  initialGame: GameWithAi,
-  player: UserWithColor,
-  currentPlayer: UserWithColor,
-  aiType: AIType,
-};
-
 // white, black and current player should be an object with properties: id, username and color
 const ChessGame = ({
   onStatusChange,
@@ -36,7 +28,7 @@ const ChessGame = ({
   player,
   currentPlayer,
   aiType,
-}: GameWithAiProps) => {
+}) => {
   const [game, setGame] = useState(new Chess(initialGame.fen));
   const [gameStatus, setGameStatus] = useState({
     gameOver: initialGame.gameOver,
