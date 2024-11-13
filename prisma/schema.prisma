@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum gender {
+  Male
+  Female
+}
+
+enum AIType {
+  BasicAI
+  SmartAI
+  SmarterAI
+  SmartestAI
+}
+
+model User {
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  firstname          String
+  lastname           String
+  username           String       @unique
+  gender             gender
+  email              String       @unique
+  password           String
+  emailVerified      DateTime?
+  image              String?
+  role               UserRole     @default(USER)
+  gamesAsWhitePlayer Game[]       @relation("whitePlayer")
+  gamesAsBlackPlayer Game[]       @relation("blackPlayer")
+  gamesWithAi        GameWithAi[] @relation("playerAiGames") // Added this relation
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model GameWithAi {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  aiType        AIType
+  fen           String
+  status        String
+  playerId      String    @db.ObjectId
+  player        User      @relation("playerAiGames", fields: [playerId], references: [id])
+  playerColor   String
+  currentPlayer String
+  gameOver      DateTime?
+  moves         Move[]    @relation("aiGameMoves")
+  winner        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Game {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  fen           String // FEN string to represent board state
+  status        String // Game status ("ongoing", "checkmate", "draw", etc.)
+  whitePlayerId String    @db.ObjectId
+  whitePlayer   User      @relation("whitePlayer", fields: [whitePlayerId], references: [id])
+  blackPlayerId String    @db.ObjectId
+  blackPlayer   User      @relation("blackPlayer", fields: [blackPlayerId], references: [id])
+  currentPlayer String
+  gameOver      DateTime?
+  winner        String?
+  moves         Move[]    @relation("gameMoves")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Move {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  gameId    String?     @db.ObjectId
+  game      Game?       @relation("gameMoves", fields: [gameId], references: [id])
+  aiGameId  String?     @db.ObjectId
+  aiGame    GameWithAi? @relation("aiGameMoves", fields: [aiGameId], references: [id])
+  playerId  String?     @db.ObjectId
+  san       String
+  from      String
+  to        String
+  piece     String
+  color     String
+  flags     String
+  before    String
+  after     String
+  createdAt DateTime    @default(now())
+}
