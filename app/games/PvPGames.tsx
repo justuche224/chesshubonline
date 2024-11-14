@@ -60,7 +60,7 @@ const GameHome = ({ userGames }: GameHomeProps) => {
               </div>
 
               <div className="mt-4">
-                <Link href={`/game/${game.id}`}>
+                <Link href={`/games/${game.id}`}>
                   <Button variant="secondary">Go to Game</Button>
                 </Link>
               </div>

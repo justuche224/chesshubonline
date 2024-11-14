@@ -51,7 +51,7 @@ const PvPAiGames = ({ userGamesWithAi }: GameAiHomeProps) => {
                 </p>
               </div>
               <div className="mt-4">
-                <Link href={`/game/ai/${game.id}`}>
+                <Link href={`/games/ai/${game.id}`}>
                   <Button variant="secondary">Go to Game</Button>
                 </Link>
               </div>
