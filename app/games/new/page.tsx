@@ -14,7 +14,13 @@ const page = async () => {
       </div>
     );
   }
-  const allUsers = await db.user.findMany();
+  const allUsers = await db.user.findMany({
+    include: {
+      gamesAsWhitePlayer: true,
+      gamesAsBlackPlayer: true,
+      gamesWithAi: true,
+    },
+  });
 
   // Filter out the current user
   const otherUsers = allUsers.filter((u) => u.id !== user?.id);

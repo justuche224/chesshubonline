@@ -1,9 +1,18 @@
 "use client";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Game, User } from "@prisma/client";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Plus, Shield, User as UserIcon } from "lucide-react";
 
-// Extend Game type to include related players
 type GameWithPlayers = Game & {
   whitePlayer: User;
   blackPlayer: User;
@@ -14,65 +23,112 @@ type GameHomeProps = {
 };
 
 const GameHome = ({ userGames }: GameHomeProps) => {
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "ongoing":
+        return "bg-green-500";
+      case "checkmate":
+        return "bg-red-500";
+      case "draw":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   return (
-    <section className="max-w-3xl mx-auto p-6 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">My Games</h1>
-        <Button variant="secondary">
-          <Link href={"/games/new"}>New Game</Link>
-        </Button>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight">My Games</h1>
+          <p className="text-muted-foreground">
+            Manage and track your ongoing and completed chess matches
+          </p>
+        </div>
+        <Link href="/new-game">
+          <Button className="flex items-center gap-2">
+            <Plus size={20} />
+            New Game
+          </Button>
+        </Link>
       </div>
+
       {userGames.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {userGames.map((game) => (
-            <div
+            <Card
               key={game.id}
-              className="p-4 bg-slate-800 shadow rounded-lg border border-slate-900"
+              className="hover:shadow-lg transition-shadow bg-sidebar"
             >
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold">Game ID: {game.id}</h2>
-                <span
-                  className={`px-2 py-1 text-sm font-medium rounded ${
-                    game.status === "completed"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {game.status}
-                </span>
-              </div>
-
-              <div className="mt-2 text-gray-200">
-                <p>
-                  <strong>White Player:</strong> {game.whitePlayer.username}
-                </p>
-                <p>
-                  <strong>Black Player:</strong> {game.blackPlayer.username}
-                </p>
-                <p>
-                  <strong>Created At:</strong>{" "}
-                  {game.createdAt.toLocaleString("en-US")}
-                </p>
-                <p>
-                  <strong>Last Move At:</strong>{" "}
-                  {game.updatedAt.toLocaleString("en-US")}
-                </p>
-              </div>
-
-              <div className="mt-4">
-                <Link href={`/games/${game.id}`}>
-                  <Button variant="secondary">Go to Game</Button>
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-6 w-6" />
+                    Game #{game.id.slice(-6)}
+                  </CardTitle>
+                  <Badge className={getStatusColor(game.status)}>
+                    {game.status}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="h-5 w-5 text-white" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        White Player
+                      </p>
+                      <p className="font-medium">{game.whitePlayer.username}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="h-5 w-5 text-black" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Black Player
+                      </p>
+                      <p className="font-medium">{game.blackPlayer.username}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    Created: {new Date(game.createdAt).toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    Last Move: {new Date(game.updatedAt).toLocaleDateString()}
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Link href={`/game/${game.id}`} className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Go to Game
+                  </Button>
                 </Link>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">
-          You have no games. Start a new game to get going!
-        </p>
+        <Card className="text-center py-12">
+          <CardContent className="space-y-4">
+            <Shield className="h-12 w-12 mx-auto text-muted-foreground" />
+            <h3 className="text-xl font-semibold">No Games Found</h3>
+            <p className="text-muted-foreground">
+              You haven&apos;t started any games yet. Create a new game to begin
+              playing!
+            </p>
+            <Link href="/new-game">
+              <Button className="mt-4">Start Your First Game</Button>
+            </Link>
+          </CardContent>
+        </Card>
       )}
-    </section>
+    </div>
   );
 };
 
