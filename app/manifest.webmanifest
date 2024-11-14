@@ -1,0 +1,37 @@
+{
+  "name": "ChessHub Online",
+  "short_name": "ChessHub",
+  "theme_color": "#1a1a2e",
+  "background_color": "#f5f5f5",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/?utm_source=homescreen",
+  "categories": [
+    "chess",
+    "online-chess",
+    "online-games",
+    "games",
+    "strategy",
+    "board-games"
+  ],
+  "description": "Play engaging player-vs-player and player-vs-AI chess games on ChessHub Online. Experience a sleek, interactive chess platform designed for enthusiasts and beginners alike.",
+  "shortcuts": [
+    {
+      "name": "Active Games",
+      "url": "/games#active"
+    },
+    {
+      "name": "Start New Game",
+      "url": "/games/new"
+    },
+    {
+      "name": "PvP Matches",
+      "url": "/games/new#pvp"
+    },
+    {
+      "name": "PvAI Matches",
+      "url": "/games/new#pvai"
+    }
+  ]
+}
