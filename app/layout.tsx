@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -35,18 +36,25 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider session={session}>
-          <NextTopLoader color="yellow" />
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full">
-              <AppTopbar />
-              {children}
-            </main>
-            <Toaster position="top-center" />
-          </SidebarProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NextTopLoader color="yellow" />
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="w-full">
+                <AppTopbar />
+                {children}
+              </main>
+              <Toaster position="top-center" />
+            </SidebarProvider>
+          </ThemeProvider>
         </SessionProvider>
       </body>
     </html>
