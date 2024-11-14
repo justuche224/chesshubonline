@@ -146,7 +146,17 @@ export default function GamePage({
               id="player"
               className="flex flex-col justify-center items-center"
             >
-              <div className="w-10 h-10 rounded-full bg-amber-500"></div>
+              <div
+                className="w-10 h-10 rounded-full"
+                style={{
+                  backgroundImage: `url(${
+                    player?.image ?? "/images/user-placeholder.png"
+                  })`,
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                }}
+              ></div>
               <div className="">{player.username}</div>
             </div>
             <div
