@@ -20,7 +20,7 @@ const CardWrapper = ({
   backButtonHref,
 }: CardWrapperProps) => {
   return (
-    <Card className="w-[400px] md:w-[500px] shadow-md">
+    <Card className="w-[370px] sm:w-[420px] md:w-[500px] shadow-md">
       <CardHeader>
         <Header label={headerLabel} />
       </CardHeader>
