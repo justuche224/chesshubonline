@@ -1,8 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import PvPGames from "./PvPGames";
-import PvPAiGames from "./PvAIGames";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GamesPage from "./GamesPage";
 
 const page = async () => {
   const user = await currentUser();
@@ -42,22 +40,7 @@ const page = async () => {
     },
   });
 
-  return (
-    <div>
-      <Tabs defaultValue="player" className="w-full text-center">
-        <TabsList>
-          <TabsTrigger value="player">Games with Players</TabsTrigger>
-          <TabsTrigger value="ai">Games with AI</TabsTrigger>
-        </TabsList>
-        <TabsContent value="player">
-          <PvPGames userGames={userGames} />
-        </TabsContent>
-        <TabsContent value="ai">
-          <PvPAiGames userGamesWithAi={userGamesWithAi} />
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+  return <GamesPage userGames={userGames} userGamesWithAi={userGamesWithAi} />;
 };
 
 export default page;

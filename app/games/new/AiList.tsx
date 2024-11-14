@@ -109,7 +109,7 @@ const AICard = ({
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden bg-sidebar text-gray-100">
+    <Card className=" hover:shadow-lg transition-all duration-300 overflow-hidden bg-sidebar text-gray-100">
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-6">
           {/* AI Avatar & Basic Info */}
@@ -156,7 +156,7 @@ const AICard = ({
 
           {/* Action Button */}
           <Button
-            className="w-full sm:w-auto group-hover:bg-sidebar-accent transition-colors"
+            className="w-full sm:w-auto hover:bg-sidebar-accent transition-colors"
             onClick={onStartMatch}
             disabled={isLoading}
           >

@@ -74,7 +74,7 @@ const PvPAiGames = ({ userGamesWithAi }: GameAiHomeProps) => {
             Challenge yourself against different AI opponents
           </p>
         </div>
-        <Link href="/games/new">
+        <Link href="/games/new#ai">
           <Button className="flex items-center gap-2">
             <Plus size={20} />
             New AI Game

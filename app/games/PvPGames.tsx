@@ -45,7 +45,7 @@ const GameHome = ({ userGames }: GameHomeProps) => {
             Manage and track your ongoing and completed chess matches
           </p>
         </div>
-        <Link href="/new-game">
+        <Link href="/games/new#player">
           <Button className="flex items-center gap-2">
             <Plus size={20} />
             New Game

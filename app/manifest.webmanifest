@@ -27,11 +27,11 @@
     },
     {
       "name": "PvP Matches",
-      "url": "/games/new#pvp"
+      "url": "/games/new#player"
     },
     {
       "name": "PvAI Matches",
-      "url": "/games/new#pvai"
+      "url": "/games/new#ai"
     }
   ]
 }
