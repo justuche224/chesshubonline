@@ -104,7 +104,7 @@ const GameHome = ({ userGames }: GameHomeProps) => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href={`/game/${game.id}`} className="w-full">
+                <Link href={`/games/${game.id}`} className="w-full">
                   <Button variant="outline" className="w-full">
                     Go to Game
                   </Button>
