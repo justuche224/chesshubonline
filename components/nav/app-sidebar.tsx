@@ -88,6 +88,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
+      <SidebarSeparator className="mt-12 md:hidden" />
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
