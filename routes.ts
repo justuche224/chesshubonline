@@ -33,4 +33,4 @@ export const apiAuthPrefix: string[] = ["/auth/login", "/api/auth"];
  *  @type {string}
  */
 
-export const DEFAULT_LOGIN_REDIRECT: string = "/games";
+export const DEFAULT_LOGIN_REDIRECT: string = "/";

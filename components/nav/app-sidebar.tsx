@@ -2,14 +2,12 @@
 import { usePathname } from "next/navigation";
 
 import {
-  Calendar,
   ChevronDown,
-  ChevronUp,
-  Gamepad2,
   Home,
-  Inbox,
+  MessageSquare,
   Search,
   Settings,
+  Swords,
 } from "lucide-react";
 
 import {
@@ -18,7 +16,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -49,31 +46,31 @@ const items = [
     title: "Home",
     url: "/",
     icon: Home,
+    description: "Dashboard & Overview",
   },
   {
     title: "Games",
     url: "/games",
-    icon: Gamepad2,
+    icon: Swords,
+    description: "Active & Past Matches",
   },
   {
-    title: "Inbox",
+    title: "Messages",
     url: "#",
-    icon: Inbox,
+    icon: MessageSquare,
+    description: "Chat & Notifications",
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
+    title: "Explore",
     url: "#",
     icon: Search,
+    description: "Find Players & Games",
   },
   {
     title: "Settings",
     url: "#",
     icon: Settings,
+    description: "Preferences & Account",
   },
 ];
 
@@ -96,48 +93,6 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  Select Workspace
-                  <ChevronDown className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <span>Acme Inc</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Acme Corp.</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarSeparator />
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="flex" size="lg">
                   <div
                     style={{
@@ -155,7 +110,7 @@ export function AppSidebar() {
                       <h1 className="font-bold">{user?.username}</h1>
                       <h2>{user?.role}</h2>
                     </div>
-                    <ChevronUp className="ml-auto" />
+                    <ChevronDown className="ml-auto" />
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -176,7 +131,28 @@ export function AppSidebar() {
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarFooter>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          {/* <SidebarGroupLabel>Application</SidebarGroupLabel> */}
+          <SidebarSeparator />
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter></SidebarFooter>
     </Sidebar>
   );
 }

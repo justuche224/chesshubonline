@@ -11,16 +11,16 @@ const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
-  const pathname = nextUrl.pathname;
+  // const pathname = nextUrl.pathname;
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  if (pathname === "/") {
-    return Response.redirect(new URL("/games", nextUrl));
-  }
+  // if (pathname === "/") {
+  //   return Response.redirect(new URL("/games", nextUrl));
+  // }
 
   if (isApiAuthRoute) {
     return null;

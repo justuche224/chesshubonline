@@ -18,7 +18,7 @@ export function AppTopbar() {
       id="top-bar"
       className="w-full border-b flex justify-between items-center px-2 py-2 text-xl bg-sidebar/20 backdrop-blur-lg sticky top-0 z-[9998]"
     >
-      <div>
+      <div className="flex items-center gap-2">
         <div className="">
           <SidebarTrigger className="md:hidden" />
         </div>
