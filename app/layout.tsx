@@ -45,7 +45,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NextTopLoader color="yellow" />
+            <NextTopLoader color="yellow" zIndex={9999} />
             <SidebarProvider>
               <AppSidebar />
               <main className="w-full">
