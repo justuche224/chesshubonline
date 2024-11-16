@@ -7,10 +7,22 @@ export default async function Home() {
   const dbUser = await db.user.findUnique({
     where: { id: user.id },
     include: {
-      gamesAsWhitePlayer: true,
-      gamesAsBlackPlayer: true,
+      gamesAsWhitePlayer: {
+        include: {
+          whitePlayer: true,
+          blackPlayer: true,
+        },
+      },
+      gamesAsBlackPlayer: {
+        include: {
+          whitePlayer: true,
+          blackPlayer: true,
+        },
+      },
       gamesWithAi: true,
     },
   });
+  // console.log(dbUser);
+
   return <HomePage dbUser={dbUser} />;
 }

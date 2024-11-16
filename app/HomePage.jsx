@@ -26,6 +26,8 @@ const HomePage = ({ dbUser }) => {
     ...dbUser.gamesAsWhitePlayer.filter((game) => !game.gameOver),
     ...dbUser.gamesAsBlackPlayer.filter((game) => !game.gameOver),
   ];
+  // console.log(activePlayerGames);
+
   const activeAiGames = dbUser.gamesWithAi.filter((game) => !game.gameOver);
 
   // Calculate completed games for stats
@@ -161,8 +163,8 @@ const HomePage = ({ dbUser }) => {
                                 <div>
                                   <p className="font-medium">
                                     {game.whitePlayerId === dbUser.id
-                                      ? "Playing as White"
-                                      : "Playing as Black"}
+                                      ? `Playing as White vs ${game.blackPlayer.username}`
+                                      : `Playing as Black vs ${game.whitePlayer.username}`}
                                   </p>
                                   <p className="text-sm text-gray-500">
                                     {new Date(
