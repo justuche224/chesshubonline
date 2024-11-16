@@ -7,6 +7,7 @@
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/?utm_source=homescreen",
+  "id": "https://chesshubonline.vercel.app/home",
   "categories": [
     "chess",
     "online-chess",
@@ -32,6 +33,38 @@
     {
       "name": "PvAI Matches",
       "url": "/games/new#ai"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/pwa/screenshots/chesshubonline.vercel.app_home(Nest Hub Max).png",
+      "sizes": "1280x1280",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa/screenshots/chesshubonline.vercel.app_home(Nest Hub Max) (1).png",
+      "sizes": "1280x1280",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa/screenshots/chesshubonline.vercel.app_home(Nest Hub Max) (2).png",
+      "sizes": "1280x1280",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa/screenshots/chesshubonline.vercel.app_home(Samsung Galaxy S20 Ultra).png",
+      "sizes": "412x915",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa/screenshots/chesshubonline.vercel.app_home(Samsung Galaxy S20 Ultra) (1).png",
+      "sizes": "412x915",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa/screenshots/chesshubonline.vercel.app_home(Samsung Galaxy S20 Ultra) (2).png",
+      "sizes": "412x915",
+      "type": "image/png"
     }
   ],
   "icons": [
