@@ -7,9 +7,10 @@ import { ModeToggle } from "../theme-button";
 export function AppTopbar() {
   const currentPath = usePathname();
   const isAuthPage = currentPath.startsWith("/auth/");
+  const isHomePage = currentPath === "/";
   const router = useRouter();
 
-  if (isAuthPage) {
+  if (isAuthPage || isHomePage) {
     return;
   }
 

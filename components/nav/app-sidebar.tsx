@@ -44,7 +44,7 @@ type User = {
 const items = [
   {
     title: "Home",
-    url: "/",
+    url: "/home",
     icon: Home,
     description: "Dashboard & Overview",
   },
@@ -78,11 +78,12 @@ export function AppSidebar() {
   const currentPath = usePathname();
   const router = useRouter();
   const isAuthPage = currentPath.startsWith("/auth/");
+  const isHomePage = currentPath === "/";
 
   const user: User | null = useCurrentUser();
   // console.log(user);
 
-  if (isAuthPage) {
+  if (isAuthPage || isHomePage) {
     return;
   }
 
