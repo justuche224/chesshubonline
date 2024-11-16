@@ -1,4 +1,5 @@
 import React from "react";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,8 +18,13 @@ import {
 import Image from "next/image";
 import { ModeToggle } from "@/components/theme-button";
 import Link from "next/link";
+import { currentUser } from "@/lib/auth";
 
-const LandingPage = () => {
+const LandingPage = async () => {
+  const user = await currentUser();
+  if (user) {
+    return redirect("/home");
+  }
   const recentGames = [
     {
       id: 1,
