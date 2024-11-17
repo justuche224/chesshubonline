@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { pusherClient } from "@/lib/pusher";
-import pieces from "./pieces";
 
 import {
   mergeStyles,
@@ -69,18 +68,19 @@ const Chessgame = ({
   }, [currentPlayer, whitePlayer, blackPlayer]);
 
   useEffect(() => {
-    if (game.isGameOver()) {
-      if (game.isDraw()) {
-        setGameOverMessage("Draw!");
-      }
+    const isCheckmate = game.isCheckmate();
+    const isDraw = game.isDraw();
 
-      if (game.isCheckmate()) {
+    if (isCheckmate || isDraw) {
+      if (isDraw) {
+        setGameOverMessage("Draw!");
+      } else if (isCheckmate) {
         setGameWinner(game.turn() === "w" ? "b" : "w");
         setGameOverMessage("Checkmate!");
       }
       setIsGameOver(true);
     }
-  }, [game.isGameOver()]);
+  }, [game]);
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`game-${initialGame.id}`);
@@ -170,15 +170,16 @@ const Chessgame = ({
   }
 
   function handleGameStatusUpdate() {
-    const previousPlayer = game.turn() == "w" ? "Black" : "White";
-    const currentPlayer = game.turn() == "w" ? "White" : "Black";
+    const isCheckmate = game.isCheckmate();
+    const isInCheck = game.inCheck();
+    const hasLegalMoves = game.moves().length > 0;
 
     let status = {
-      gameOver: true,
+      gameOver: isCheckmate || !hasLegalMoves,
       history: game.history({ verbose: true }),
-      gameState: game.isCheckmate()
+      gameState: isCheckmate
         ? "checkmate"
-        : game.inCheck()
+        : isInCheck
         ? "in check"
         : game.isStalemate()
         ? "stalemate"
@@ -195,62 +196,28 @@ const Chessgame = ({
 
     switch (status.gameState) {
       case "checkmate":
-        status.message = `${previousPlayer} wins by Checkmate`;
-        status.winner = game.turn();
+        status.message = `${
+          game.turn() === "w" ? "Black" : "White"
+        } wins by Checkmate`;
+        status.winner = game.turn() === "w" ? "b" : "w";
         break;
       case "in check":
-        status.message = `${currentPlayer} is in check. ${currentPlayer}'s move`;
+        status.message = `${
+          game.turn() === "w" ? "White" : "Black"
+        } is in check.`;
         break;
       case "stalemate":
-        status.message =
-          "The game is a draw by Stalemate. Neither player can make a valid move.";
-        break;
-      case "insufficient material":
-        status.message =
-          "The game is a draw due to Insufficient Material. Neither side can force a checkmate.";
-        break;
-      case "threefold repetition":
-        status.message =
-          "The game is a draw by threefold repetition. The same position has occurred three times, leading to an automatic draw.";
-        break;
-      case "50-move rule":
-        status.message =
-          "The game is a draw by the 50-Move Rule. 50 moves passed without a pawn move or capture.";
-        break;
-      case "promote":
-        status.message = `${currentPlayer}'s pawn has reached the last rank! Promote to continue.`;
+        status.message = "The game is a draw by stalemate.";
         break;
       default:
-        status.gameOver = false;
-        status.message = `${currentPlayer}'s move`;
+        status.message = `${game.turn() === "w" ? "White" : "Black"}'s move.`;
+        break;
     }
 
-    // Set game status state whenever we request for the game status
+    // Set the game status and notify the parent component if needed
     setGameStatus(status);
-    // Call onStatusChange prop function with the status if it exists
     onStatusChange?.(status);
-    return status;
   }
-
-  // function renderPieceCapturedBy(color) {
-//     const capturedPieces = game
-//       .history({ verbose: true })
-//       ?.filter((move) => move.captured && move.color == color);
-// 
-//     return (
-//       <div className="captured-container w-full bg-slate-500/70 rounded shadow-lg my-2 mx-auto flex flex-wrap justify-center items-center">
-//         {capturedPieces.map(
-//           (move) => pieces[(color == "w" ? "b" : "w") + move.captured]
-//         )}
-// 
-//         {capturedPieces.length == 0 && (
-//           <p className="text-sm p-2">
-//             Captured {color == "w" ? "black" : "white"} pieces will appear here.
-//           </p>
-//         )}
-//       </div>
-//     );
-//   }
 
   const gameBoard = game.board().flat();
   const currentPlayerKing = gameBoard.find(
@@ -270,10 +237,10 @@ const Chessgame = ({
             <button
               className="mt-4 px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 rounded-md"
               onClick={() => {
-                router.push("/game/new");
+                router.push("/games");
               }}
             >
-              Play Again
+              Back to Games
             </button>
           </div>
         </div>

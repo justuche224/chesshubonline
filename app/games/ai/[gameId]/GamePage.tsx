@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CircleArrowLeft, MessagesSquare } from "lucide-react";
-import MovesDisplay from "./MovesDisplay";
+// import MovesDisplay from "./MovesDisplay";
 // import { AspectRatio } from "@/components/ui/aspect-ratio";
 // import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
@@ -60,43 +60,43 @@ export default function GamePage({
     return () => window.removeEventListener("resize", calculateBoardSize);
   }, []);
 
-  const player1Moves = [
-    "e4",
-    "Nf3",
-    "Bb5",
-    "Ba4",
-    "O-O",
-    "Re1",
-    "Bb3",
-    "c3",
-    "h3",
-    "d4",
-    "Nbd2",
-    "Bc2",
-    "a4",
-    "b4",
-    "d5",
-    "Nf1",
-  ];
+  // const player1Moves = [
+  //   "e4",
+  //   "Nf3",
+  //   "Bb5",
+  //   "Ba4",
+  //   "O-O",
+  //   "Re1",
+  //   "Bb3",
+  //   "c3",
+  //   "h3",
+  //   "d4",
+  //   "Nbd2",
+  //   "Bc2",
+  //   "a4",
+  //   "b4",
+  //   "d5",
+  //   "Nf1",
+  // ];
 
-  const player2Moves = [
-    "e4",
-    "Nf3",
-    "Bb5",
-    "Ba4",
-    "O-O",
-    "Re1",
-    "Bb3",
-    "c3",
-    "h3",
-    "d4",
-    "Nbd2",
-    "Bc2",
-    "a4",
-    "b4",
-    "d5",
-    "Nf1",
-  ];
+  // const player2Moves = [
+  //   "e4",
+  //   "Nf3",
+  //   "Bb5",
+  //   "Ba4",
+  //   "O-O",
+  //   "Re1",
+  //   "Bb3",
+  //   "c3",
+  //   "h3",
+  //   "d4",
+  //   "Nbd2",
+  //   "Bc2",
+  //   "a4",
+  //   "b4",
+  //   "d5",
+  //   "Nf1",
+  // ];
 
   const router = useRouter();
 
@@ -196,12 +196,12 @@ export default function GamePage({
         {/* Moves and chats coloumn */}
         <div className="w-full lg:w-[45%] mt-3 flex flex-col space-y-3 px-3">
           {/* Moves */}
-          <MovesDisplay
+          {/* <MovesDisplay
             player1Moves={player1Moves}
             player2Moves={player2Moves}
             player1Name={player.username}
             player2Name={aiType}
-          />
+          /> */}
           {/* Chat */}
           <div className="hidden md:block">
             <div className="w-full rounded-md border h-[300px] bg-muted text-center">

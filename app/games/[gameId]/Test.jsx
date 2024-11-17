@@ -15,7 +15,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import MovesDisplay from "./MovesDisplay";
+// import MovesDisplay from "./MovesDisplay";
 import { useRouter } from "next/navigation";
 
 export default function GamePage({
@@ -24,45 +24,43 @@ export default function GamePage({
   currentPlayer,
   initialGame,
 }) {
-  console.log(`white player: ${JSON.stringify(whitePlayer)}`);
+  // const player1Moves = [
+  //   "e4",
+  //   "Nf3",
+  //   "Bb5",
+  //   "Ba4",
+  //   "O-O",
+  //   "Re1",
+  //   "Bb3",
+  //   "c3",
+  //   "h3",
+  //   "d4",
+  //   "Nbd2",
+  //   "Bc2",
+  //   "a4",
+  //   "b4",
+  //   "d5",
+  //   "Nf1",
+  // ];
 
-  const player1Moves = [
-    "e4",
-    "Nf3",
-    "Bb5",
-    "Ba4",
-    "O-O",
-    "Re1",
-    "Bb3",
-    "c3",
-    "h3",
-    "d4",
-    "Nbd2",
-    "Bc2",
-    "a4",
-    "b4",
-    "d5",
-    "Nf1",
-  ];
-
-  const player2Moves = [
-    "e4",
-    "Nf3",
-    "Bb5",
-    "Ba4",
-    "O-O",
-    "Re1",
-    "Bb3",
-    "c3",
-    "h3",
-    "d4",
-    "Nbd2",
-    "Bc2",
-    "a4",
-    "b4",
-    "d5",
-    "Nf1",
-  ];
+  // const player2Moves = [
+  //   "e4",
+  //   "Nf3",
+  //   "Bb5",
+  //   "Ba4",
+  //   "O-O",
+  //   "Re1",
+  //   "Bb3",
+  //   "c3",
+  //   "h3",
+  //   "d4",
+  //   "Nbd2",
+  //   "Bc2",
+  //   "a4",
+  //   "b4",
+  //   "d5",
+  //   "Nf1",
+  // ];
 
   const [status, setStatus] = useState({});
   const [boardWidth, setBoardWidth] = useState(0);
@@ -174,7 +172,7 @@ export default function GamePage({
             </div>
           </div>
           {/* Game board */}
-          <div className="mt-3">
+          <div className="mt-3 grid place-content-center">
             <div style={{ width: boardWidth, maxWidth: "100%" }}>
               <Chessgame
                 onStatusChange={setStatus}
@@ -189,12 +187,12 @@ export default function GamePage({
         {/* Moves and chats coloumn */}
         <div className="w-full lg:w-[45%] mt-3 flex flex-col space-y-3 px-3">
           {/* Moves */}
-          <MovesDisplay
+          {/* <MovesDisplay
             player1Moves={player1Moves}
             player2Moves={player2Moves}
             player1Name={whitePlayer.username}
             player2Name={blackPlayer.username}
-          />
+          /> */}
           {/* Chat */}
           <div className="hidden md:block">
             <div className="w-full rounded-md border h-[300px] bg-muted text-center">

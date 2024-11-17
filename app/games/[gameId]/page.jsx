@@ -38,11 +38,11 @@ const page = async ({ params }) => {
 
   const whitePlayer = await db.user.findUnique({
     where: { id: game.whitePlayerId },
-    select: { id: true, username: true },
+    select: { id: true, username: true, image: true },
   });
   const blackPlayer = await db.user.findUnique({
     where: { id: game.blackPlayerId },
-    select: { id: true, username: true },
+    select: { id: true, username: true, image: true },
   });
 
   whitePlayer.color = "w";

@@ -120,7 +120,9 @@ const AICard = ({
 
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold">{ai.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-300">
+                  {ai.name}
+                </h3>
                 <span
                   className={`px-2 py-0.5 text-xs rounded-full ${getDifficultyColor(
                     ai.type
@@ -129,7 +131,9 @@ const AICard = ({
                   {ai.type}
                 </span>
               </div>
-              <p className="text-sm text-gray-300 mb-2">{ai.description}</p>
+              <p className="text-sm text-gray-800 dark:text-gray-300 mb-2">
+                {ai.description}
+              </p>
             </div>
           </div>
 
@@ -138,7 +142,7 @@ const AICard = ({
             <div className="space-y-2">
               {Object.entries(ai.stats).map(([stat, value]) => (
                 <div key={stat} className="flex items-center gap-2">
-                  <span className="text-sm text-gray-300 w-20 capitalize">
+                  <span className="text-sm text-gray-800 dark:text-gray-300 w-20 capitalize">
                     {stat}
                   </span>
                   <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
