@@ -78,20 +78,20 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="container mx-auto p-4 sm:p-6 max-w-4xl">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-4 mb-6 sm:mb-8">
         <Button variant="ghost" size="icon" onClick={() => router.back()}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex items-center gap-2">
           <Users2 className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Find Friends</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Find Friends</h1>
         </div>
       </div>
 
       {/* Search Input */}
-      <div className="relative mb-8">
+      <div className="relative mb-6 sm:mb-8">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search by name, username, or email..."
@@ -102,35 +102,38 @@ const SearchPage = () => {
       </div>
 
       {/* Results */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {isLoading ? (
-          <div className="flex items-center justify-center py-12">
+          <div className="flex items-center justify-center py-8 sm:py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : users.length > 0 ? (
           users.map((user) => (
             <Card key={user.id}>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={user.image} alt={user.username} />
-                    <AvatarFallback className="bg-primary/10">
-                      {user.firstname[0]}
-                      {user.lastname[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold truncate">
-                      {user.firstname} {user.lastname}
-                    </h3>
-                    <p className="text-sm text-muted-foreground truncate">
-                      @{user.username}
-                    </p>
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
+                      <AvatarImage src={user.image} alt={user.username} />
+                      <AvatarFallback className="bg-primary/10">
+                        {user.firstname[0]}
+                        {user.lastname[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold truncate">
+                        {user.firstname} {user.lastname}
+                      </h3>
+                      <p className="text-sm text-muted-foreground truncate">
+                        @{user.username}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 sm:ml-auto">
                     <Button
                       variant="outline"
                       size="sm"
+                      className="flex-1 sm:flex-none"
                       onClick={() => router.push(`/profile/${user.username}`)}
                     >
                       View Profile
@@ -138,6 +141,7 @@ const SearchPage = () => {
                     <Button
                       variant={user.hasPendingRequest ? "secondary" : "default"}
                       size="sm"
+                      className="flex-1 sm:flex-none"
                       disabled={
                         user.hasPendingRequest || pendingRequests.has(user.id)
                       }
@@ -156,16 +160,16 @@ const SearchPage = () => {
             </Card>
           ))
         ) : searchQuery ? (
-          <div className="text-center py-12">
-            <Users2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <div className="text-center py-8 sm:py-12">
+            <Users2 className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
             <h3 className="text-lg font-semibold mb-2">No users found</h3>
             <p className="text-muted-foreground">
               Try adjusting your search terms
             </p>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <Search className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <div className="text-center py-8 sm:py-12">
+            <Search className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
             <h3 className="text-lg font-semibold mb-2">Search for friends</h3>
             <p className="text-muted-foreground">
               Search by name, username, or email address
