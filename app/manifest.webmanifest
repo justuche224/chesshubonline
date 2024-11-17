@@ -7,7 +7,7 @@
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/?utm_source=homescreen",
-  "id": "https://chesshubonline.vercel.app/home",
+  "id": "/",
   "categories": [
     "chess",
     "online-chess",
