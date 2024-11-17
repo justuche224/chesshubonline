@@ -3,15 +3,23 @@
 import { useRouter, usePathname } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "../theme-button";
+import { Users2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { usePendingFriendRequests } from "@/hooks/usePendingFriendRequests";
+
+// interface AppTopbarProps {
+//   userId: string;
+// }
 
 export function AppTopbar() {
   const currentPath = usePathname();
   const isAuthPage = currentPath.startsWith("/auth/");
   const isHomePage = currentPath === "/";
   const router = useRouter();
+  const { pendingCount } = usePendingFriendRequests();
 
   if (isAuthPage || isHomePage) {
-    return;
+    return null;
   }
 
   return (
@@ -23,12 +31,24 @@ export function AppTopbar() {
         <div className="">
           <SidebarTrigger className="md:hidden" />
         </div>
-        <div className="" onClick={() => router.push("/")}>
+        <div className="cursor-pointer" onClick={() => router.push("/")}>
           CHESSHUB
         </div>
       </div>
-      <div className="z-[9999]">
-        <ModeToggle />
+      <div className="flex gap-2 items-center">
+        <div className="relative">
+          <Button onClick={() => router.push("/friends")}>
+            <Users2 />
+          </Button>
+          {pendingCount > 0 && (
+            <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {pendingCount}
+            </div>
+          )}
+        </div>
+        <div className="z-[9999]">
+          <ModeToggle />
+        </div>
       </div>
     </div>
   );
