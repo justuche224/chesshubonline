@@ -20,9 +20,10 @@ export default async function Home() {
         },
       },
       gamesWithAi: true,
+      friends1: true,
+      friends2: true,
     },
   });
-  // console.log(dbUser);
 
   return <HomePage dbUser={dbUser} />;
 }

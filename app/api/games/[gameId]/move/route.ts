@@ -12,7 +12,7 @@ export async function POST(
     console.log("fired move route");
 
     const user = await currentUser();
-    const { gameId } = params;
+    const { gameId } = await params;
     const body = await request.json();
     const { move, playerId } = body; // `move` is an object containing all move details.
 

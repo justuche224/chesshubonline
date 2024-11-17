@@ -17,6 +17,7 @@ import {
   Clock,
   Users,
   User,
+  UserPlus,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -41,6 +42,10 @@ const HomePage = ({ dbUser }) => {
     (game) => game.winner === dbUser.id
   ).length;
 
+  // Calculate total friends (combining both friends1 and friends2)
+  const totalFriends =
+    (dbUser.friends1?.length || 0) + (dbUser.friends2?.length || 0);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
       {/* Welcome Section */}
@@ -63,7 +68,7 @@ const HomePage = ({ dbUser }) => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link href="/games/new#player">
             <Card className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
               <CardContent className="flex items-center justify-between p-6">
@@ -99,10 +104,41 @@ const HomePage = ({ dbUser }) => {
               </CardContent>
             </Card>
           </Link>
+
+          <Link href="/friends/new">
+            <Card className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+              <CardContent className="flex items-center justify-between p-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <UserPlus size={24} className="text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Find Friends</h3>
+                    <p className="text-sm text-gray-500">
+                      Connect with players
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="text-gray-400" />
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Link href="/friends">
+            <Card className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Friends</CardTitle>
+                <Users size={20} className="text-purple-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{totalFriends}</div>
+              </CardContent>
+            </Card>
+          </Link>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Wins</CardTitle>

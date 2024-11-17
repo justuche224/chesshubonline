@@ -29,7 +29,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/games/ai/[gameId]/MovesDisplay.jsx",
-    "app/games/ai/[gameId]/Chessgame.jsx"
+    "app/games/ai/[gameId]/Chessgame.jsx",
+    "app/profile/[username]/page.jsx",
+    "app/profile/[username]/Profile.jsx"
   ],
   "exclude": ["node_modules"]
 }

@@ -24,7 +24,7 @@ const page = async () => {
       blackPlayer: true,
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   });
 
@@ -36,7 +36,7 @@ const page = async () => {
       player: true,
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   });
 

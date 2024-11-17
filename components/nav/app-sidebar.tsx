@@ -5,7 +5,7 @@ import {
   ChevronDown,
   Home,
   MessageSquare,
-  Search,
+  Users,
   Settings,
   Swords,
 } from "lucide-react";
@@ -61,10 +61,10 @@ const items = [
     description: "Chat & Notifications",
   },
   {
-    title: "Explore",
-    url: "#",
-    icon: Search,
-    description: "Find Players & Games",
+    title: "Friends",
+    url: "/friends",
+    icon: Users,
+    description: "View and manage friends",
   },
   {
     title: "Settings",
