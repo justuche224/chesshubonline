@@ -13,11 +13,29 @@ const page = async ({ params }) => {
     );
   }
 
-  const gameId = await params.gameId;
+  const { gameId } = await params;
 
   const game = await db.game.findUnique({
     where: { id: gameId },
-    include: { moves: { orderBy: { createdAt: "asc" } } },
+    include: {
+      moves: {
+        orderBy: { createdAt: "asc" },
+      },
+      messages: {
+        include: {
+          sender: {
+            select: {
+              id: true,
+              username: true,
+              image: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
   });
 
   if (!game) {

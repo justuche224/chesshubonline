@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 // import MovesDisplay from "./MovesDisplay";
 import { useRouter } from "next/navigation";
+import Chat from "./Chat";
 
 export default function GamePage({
   whitePlayer,
@@ -109,14 +110,15 @@ export default function GamePage({
                   <DrawerDescription>
                     Lets be civil and respectful.
                   </DrawerDescription>
-                  <div className="w-full rounded-md border h-[300px] bg-muted text-center">
-                    <h1>All the chat will show up here</h1>
-                  </div>
+                  <Chat
+                    initialGame={initialGame}
+                    currentPlayer={currentPlayer}
+                  />
                 </DrawerHeader>
                 <DrawerFooter>
                   {/* <Button>Submit</Button> */}
                   <DrawerClose>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">Close</Button>
                   </DrawerClose>
                 </DrawerFooter>
               </DrawerContent>
@@ -195,9 +197,7 @@ export default function GamePage({
           /> */}
           {/* Chat */}
           <div className="hidden md:block">
-            <div className="w-full rounded-md border h-[300px] bg-muted text-center">
-              <h1>All the chat will show up here</h1>
-            </div>
+            <Chat initialGame={initialGame} currentPlayer={currentPlayer} />
           </div>
         </div>
       </section>

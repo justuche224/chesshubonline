@@ -54,6 +54,7 @@ model User {
   friends2           Friendship[]    @relation("user2Friends")
   sentRequests       FriendRequest[] @relation("sentFriendRequests")
   receivedRequests   FriendRequest[] @relation("receivedFriendRequests")
+  sentMessages       Message[]       @relation("sentMessages")
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
 }
@@ -104,6 +105,7 @@ model Game {
   gameOver      DateTime?
   winner        String?
   moves         Move[]    @relation("gameMoves")
+  messages      Message[] @relation("gameMessages")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -148,4 +150,14 @@ model FriendRequest {
   updatedAt  DateTime      @updatedAt
 
   @@unique([senderId, receiverId])
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  gameId    String   @db.ObjectId
+  game      Game     @relation("gameMessages", fields: [gameId], references: [id])
+  senderId  String   @db.ObjectId
+  sender    User     @relation("sentMessages", fields: [senderId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
 }
