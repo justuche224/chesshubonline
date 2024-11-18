@@ -55,8 +55,8 @@ const items = [
     description: "Active & Past Matches",
   },
   {
-    title: "Messages",
-    url: "/messages",
+    title: "Inbox",
+    url: "/inbox",
     icon: MessageSquare,
     description: "Chat & Notifications",
     badge: 3,

@@ -24,7 +24,7 @@ const UserProfile = ({ user }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const imageInputRef = useRef(null);
   const [isPending, startTransition] = useTransition();
-  const MAX_FILE_SIZE_MB = 5;
+  const MAX_FILE_SIZE_MB = 2;
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
