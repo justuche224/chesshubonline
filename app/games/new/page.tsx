@@ -1,6 +1,13 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import NewGamePage from "./NewGamePage";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Game | ChessHub Online",
+  description:
+    "Challenge your skills in ChessHub Online, the ultimate platform for real-time player-vs-player and player-vs-AI chess matches. Enjoy intuitive gameplay, seamless moves tracking, and personalized AI opponents.",
+};
 
 const page = async () => {
   const user = await currentUser();
