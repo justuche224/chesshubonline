@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useTransition } from "react";
 import { Camera, Mail, Calendar, User, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
@@ -15,13 +15,16 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { UploadDropzone } from "@/lib/uploadthing";
-import { uploadProfilePicture } from "@/actions/uploadProfilePicture"; // Import the server action
+import { uploadImage } from "@/supabase/storage/client";
+import { convertBlobUrlToFile } from "@/lib/utils";
 import { toast } from "sonner";
+import { uploadProfilePicture } from "@/actions/uploadProfilePicture";
 
 const UserProfile = ({ user }) => {
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+  const imageInputRef = useRef(null);
+  const [isPending, startTransition] = useTransition();
+  const MAX_FILE_SIZE_MB = 5;
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -31,30 +34,62 @@ const UserProfile = ({ user }) => {
     });
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setUploadedImageUrl(imageUrl);
-  };
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
 
-  const handleSubmit = async () => {
-    try {
-      setIsSubmitting(true);
-      const response = await uploadProfilePicture(uploadedImageUrl);
-
-      if (response.error) {
-        toast.error(response.error);
+      // Check file size
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > MAX_FILE_SIZE_MB) {
+        toast.error(`File size exceeds ${MAX_FILE_SIZE_MB}MB limit`);
         return;
       }
 
-      toast.success("Profile picture updated successfully");
-      // Optionally, you can update the UI immediately
-      user.image = uploadedImageUrl;
-      setUploadedImageUrl(""); // Reset the uploaded image URL
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
+      // Check file type (only images)
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select an image file");
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
     }
+  };
+
+  const handleImageUpload = async () => {
+    if (!imageUrl) return;
+
+    startTransition(async () => {
+      const imageFile = await convertBlobUrlToFile(imageUrl);
+
+      const { imageUrl: uploadedUrl, error } = await uploadImage({
+        file: imageFile,
+        bucket: "chesshub",
+      });
+
+      if (error) {
+        toast.error("Failed to upload image");
+        console.error(error);
+        return;
+      }
+
+      // Update user's profile picture
+      try {
+        const response = await uploadProfilePicture(uploadedUrl);
+
+        if (response.error) {
+          toast.error(response.error);
+          return;
+        }
+
+        toast.success("Profile picture updated successfully");
+        user.image = uploadedUrl;
+        setImageUrl(null);
+      } catch (error) {
+        toast.error("Something went wrong");
+        console.error(error);
+      }
+    });
   };
 
   return (
@@ -89,11 +124,7 @@ const UserProfile = ({ user }) => {
               <Image
                 width={128}
                 height={128}
-                src={
-                  uploadedImageUrl ||
-                  user.image ||
-                  "/images/user-placeholder.png"
-                }
+                src={imageUrl || user.image || "/images/user-placeholder.png"}
                 alt={`${user.firstname}'s profile`}
                 className="w-full h-full object-cover"
               />
@@ -109,29 +140,46 @@ const UserProfile = ({ user }) => {
                 <DrawerHeader>
                   <DrawerTitle>Update Profile Picture</DrawerTitle>
                   <DrawerDescription>
-                    Upload a new profile picture. Click submit once you&apos;ve
-                    selected an image.
+                    Upload a new profile picture.
                   </DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4">
-                  <UploadDropzone
-                    endpoint="imageUploader"
-                    onClientUploadComplete={(res) => {
-                      if (res && res[0]) {
-                        handleImageUpload(res[0].url);
-                      }
-                    }}
-                    onUploadError={(error) => {
-                      toast.error(`Upload Error! ${error.message}`);
-                    }}
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    ref={imageInputRef}
+                    onChange={handleImageChange}
+                    disabled={isPending}
                   />
+
+                  <Button
+                    variant="outline"
+                    onClick={() => imageInputRef.current?.click()}
+                    disabled={isPending}
+                    className="w-full mb-4"
+                  >
+                    Select Image
+                  </Button>
+
+                  {imageUrl && (
+                    <div className="mb-4 flex justify-center">
+                      <Image
+                        src={imageUrl}
+                        width={300}
+                        height={300}
+                        alt="Selected image"
+                        className="object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
                 </div>
                 <DrawerFooter>
                   <Button
-                    onClick={handleSubmit}
-                    disabled={!uploadedImageUrl || isSubmitting}
+                    onClick={handleImageUpload}
+                    disabled={isPending || !imageUrl}
                   >
-                    {isSubmitting ? "Updating..." : "Submit"}
+                    {isPending ? "Uploading..." : "Upload Image"}
                   </Button>
                   <DrawerClose asChild>
                     <Button variant="outline">Cancel</Button>

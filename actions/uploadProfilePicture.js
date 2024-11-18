@@ -2,6 +2,7 @@
 
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export const uploadProfilePicture = async (imageUrl) => {
   try {
@@ -24,7 +25,7 @@ export const uploadProfilePicture = async (imageUrl) => {
     if (!updatedUser) {
       return { error: "Failed to update profile picture" };
     }
-
+    revalidatePath("/profile");
     return { success: true };
   } catch (error) {
     console.error("Error updating profile picture:", error);
