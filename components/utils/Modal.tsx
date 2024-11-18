@@ -9,10 +9,21 @@ export const AccountCreatedModal = () => {
         backButtonLable="Back to login"
         backButtonHref="/auth/login"
       >
-        <h1>
-          A verification link has been sent to your email. Please check your
-          inbox to activate your account.
-        </h1>
+        <div className="text-center space-y-4">
+          <h2 className="text-xl font-semibold">
+            Account Successfully Created
+          </h2>
+          <p className="text-gray-600">
+            A verification link has been sent to your email. Please check your
+            inbox to activate your account.
+          </p>
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 p-3 mt-4">
+            <p className="text-yellow-700 text-sm">
+              📧 Can&apos;t find the email? Check your spam folder and mark it
+              as &quot;Not Spam&quot; to ensure future emails reach your inbox.
+            </p>
+          </div>
+        </div>
       </CardWrapper>
     </section>
   );
@@ -22,14 +33,25 @@ export const PasswordResetModal = () => {
   return (
     <section className="min-h-screen w-full fixed left-0 top-0 bg-[#0000007e] z-[997] flex flex-col justify-center items-center backdrop-blur-lg">
       <CardWrapper
-        headerLabel="Link sent!"
+        headerLabel="Account Created"
         backButtonLable="Back to login"
         backButtonHref="/auth/login"
       >
-        <h1>
-          A link to reset your password has been sent to your email. Please
-          check your inbox to reset your password.
-        </h1>
+        <div className="text-center space-y-4">
+          <h2 className="text-xl font-semibold">
+            A Link to reset your password has been sent
+          </h2>
+          <p className="text-gray-600">
+            A link to reset your password has been sent to your email. Please
+            check your inbox to reset your password.
+          </p>
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 p-3 mt-4">
+            <p className="text-yellow-700 text-sm">
+              📧 Can&apos;t find the email? Check your spam folder and mark it
+              as &quot;Not Spam&quot; to ensure future emails reach your inbox.
+            </p>
+          </div>
+        </div>
       </CardWrapper>
     </section>
   );
