@@ -10,6 +10,10 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import "./globals.css";
 
+interface ExtendedMetadata extends Metadata {
+  canonical: string;
+}
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -21,10 +25,26 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata: Metadata = {
-  title: "ChessHub Online: Engage in PvP and PvAI Chess Matches",
+export const metadata: ExtendedMetadata = {
+  title: "ChessHub - #1 Online Chess Platform | Play, Learn, Compete",
   description:
-    "Challenge your skills in ChessHub Online, the ultimate platform for real-time player-vs-player and player-vs-AI chess matches. Enjoy intuitive gameplay, seamless moves tracking, and personalized AI opponents.",
+    "ChessHub is the go-to platform for chess enthusiasts! Play online games, challenge AI, join tournaments, and elevate your chess game with analytics.",
+  keywords:
+    "play chess online, learn chess, online chess tournaments, AI chess opponents, beginner chess training, chess tutorials",
+  canonical: "https://www.chesshub.com",
+  openGraph: {
+    title: "ChessHub - Play Online Chess & Improve Your Skills",
+    description:
+      "Master the game of chess! Play online with friends, train with AI, and track your performance with advanced tools.",
+    images: [{ url: "/images/chesshub.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChessHub - Play Chess & Learn Chess Strategies",
+    description:
+      "Play chess online with players worldwide. Join our tournaments and learn to improve with tailored analytics.",
+    images: ["/images/chesshub.png"],
+  },
 };
 
 export default async function RootLayout({
