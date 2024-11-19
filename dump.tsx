@@ -25,13 +25,11 @@ import Image from "next/image";
 import { ModeToggle } from "@/components/theme-button";
 import Link from "next/link";
 import { currentUser } from "@/lib/auth";
-
 const LandingPage = async () => {
   const user = await currentUser();
   if (user) {
     return redirect("/home");
   }
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Navigation */}
@@ -65,75 +63,103 @@ const LandingPage = async () => {
           </div>
         </div>
       </nav>
-
       {/* Hero Section */}
-      <section className="relative overflow-hidden" aria-label="Hero">
+      <section
+        className="relative overflow-hidden pt-32 pb-20 px-6 lg:px-8"
+        aria-label="Hero"
+      >
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-50 dark:opacity-30" />
 
-        <div className="relative pt-32 pb-20 px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <Badge variant="outline" className="mb-8 animate-fade-in">
-              <Sparkles className="h-3 w-3 mr-1" />
-              New: AI Chess Opponents with Adaptive Learning
-            </Badge>
+        <div className="mx-auto max-w-7xl">
+          <Badge variant="outline" className="mb-8 animate-fade-in">
+            <Sparkles className="h-3 w-3 mr-1" />
+            New: AI Chess Opponents with Adaptive Learning
+          </Badge>
 
-            <div className="flex flex-col lg:flex-row items-center gap-12">
-              <div className="flex-1">
-                <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-                  Play Chess Online in the
-                  <span className="text-primary"> Digital Age</span>
-                </h1>
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1">
+              <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-6 animate-fade-in-up">
+                Master Chess Online in the
+                <span className="text-primary"> Digital Age</span>
+              </h1>
 
-                <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-12 animate-fade-in-up delay-100">
-                  Experience the best in online chess at ChessHub. Challenge
-                  real players worldwide, train with intelligent AI opponents,
-                  and elevate your game with professional analytics.
-                </p>
+              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-12 animate-fade-in-up delay-100">
+                Elevate your chess game on ChessHub, the premier online platform
+                for players of all levels. Challenge real opponents, train with
+                advanced AI, and track your progress with comprehensive
+                analytics.
+              </p>
 
-                <div className="flex flex-wrap gap-4 animate-fade-in-up delay-200">
-                  <Link title="Play Chess Online Now" href="/games/new#player">
-                    <Button size="lg" className="group">
-                      Start Playing For Free
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Button>
-                  </Link>
-                  <Button size="lg" variant="outline">
-                    Watch Chess Tutorial
+              <div className="flex flex-wrap gap-4 animate-fade-in-up delay-200">
+                <Link title="Play Chess Online Now" href="/games/new#player">
+                  <Button size="lg" className="group">
+                    Start Playing For Free
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
-                </div>
-              </div>
-
-              <div className="flex-1 flex justify-center">
-                <Image
-                  width={500}
-                  height={500}
-                  src="/images/chesshub.png"
-                  alt="Interactive Chess Game Interface"
-                  className="w-full max-w-md rounded-lg shadow-2xl animate-float"
-                  priority
-                />
+                </Link>
+                <Button size="lg" variant="outline">
+                  Watch Chess Tutorial
+                </Button>
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-              <StatCard
-                icon={<Users />}
-                value="100K+"
-                label="Active Chess Players"
-              />
-              <StatCard icon={<Zap />} value="1M+" label="Online Chess Games" />
-              <StatCard
-                icon={<Crown />}
-                value="5K+"
-                label="Tournament Champions"
+            <div className="flex-1 flex justify-center">
+              <Image
+                width={500}
+                height={500}
+                src="/images/chesshub.png"
+                alt="Interactive Chess Game Interface"
+                className="w-full max-w-md rounded-lg shadow-2xl animate-float"
+                priority
               />
             </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+            <StatCard
+              icon={<Users />}
+              value="100K+"
+              label="Active Chess Players"
+            />
+            <StatCard icon={<Zap />} value="1M+" label="Online Chess Games" />
+            <StatCard
+              icon={<Crown />}
+              value="5K+"
+              label="Tournament Champions"
+            />
           </div>
         </div>
       </section>
 
-      {/* Rankings & Tournaments - New Section */}
+      {/* Features Section */}
+      <section className="py-12 px-6" aria-label="Chess Features">
+        <div className="mx-auto max-w-7xl">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-12">
+            Experience Premier Online Chess at ChessHub
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={<Swords />}
+              title="Real-time Chess Matches"
+              description="Challenge chess players worldwide with our smooth, lag-free gaming experience. Play competitive matches anytime."
+            />
+            <FeatureCard
+              icon={<Bot />}
+              title="AI Chess Training"
+              description="Improve your chess skills with our adaptive AI that learns and grows stronger as you improve. Perfect for beginners and masters alike."
+            />
+            <FeatureCard
+              icon={<Brain />}
+              title="Chess Analytics"
+              description="Master your chess strategy with detailed game analysis, move tracking, and comprehensive performance metrics."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Competitive Chess Section */}
       <section className="py-12 px-6" aria-label="Chess Rankings">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
@@ -180,7 +206,7 @@ const LandingPage = async () => {
         </div>
       </section>
 
-      {/* Learning Resources - New Section */}
+      {/* Learning Resources Section */}
       <section
         className="py-12 px-6 bg-gray-50 dark:bg-gray-900"
         aria-label="Chess Learning"
@@ -193,128 +219,57 @@ const LandingPage = async () => {
             <LearningCard
               icon={<Book />}
               title="Video Lessons"
-              description="Access 1000+ video lessons from chess grandmasters"
+              description="Access 1000+ video lessons from chess grandmasters to improve your gameplay at any skill level."
               count="1000+"
             />
             <LearningCard
               icon={<Target />}
               title="Practice Puzzles"
-              description="Sharpen your tactical skills with daily puzzles"
+              description="Sharpen your tactical skills with our library of 5000+ carefully curated chess puzzles."
               count="5000+"
             />
             <LearningCard
               icon={<Shield />}
               title="Opening Database"
-              description="Study and master chess openings with our comprehensive database"
+              description="Study and master chess openings with our comprehensive database of over 10,000 opening variations."
               count="10000+"
             />
           </div>
         </div>
       </section>
 
-      {/* Game Modes - New Section */}
-      <section className="py-12 px-6" aria-label="Chess Game Modes">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-            Multiple Chess Formats
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <GameModeCard
-              icon={<Clock />}
-              title="Blitz"
-              description="3-5 minute games"
-            />
-            <GameModeCard
-              icon={<Zap />}
-              title="Bullet"
-              description="1 minute lightning rounds"
-            />
-            <GameModeCard
-              icon={<Brain />}
-              title="Classical"
-              description="30+ minute strategic battles"
-            />
-            <GameModeCard
-              icon={<Bot />}
-              title="AI Training"
-              description="Custom difficulty matches"
-            />
+      {/* Footer */}
+      <footer className="bg-gray-100 dark:bg-gray-800 py-8">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-4 md:mb-0">
+            <span className="text-gray-600 dark:text-gray-400">
+              © 2023 ChessHub. All rights reserved.
+            </span>
           </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-12 px-6" aria-label="Chess Features">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-12">
-            Experience Premier Online Chess at ChessHub
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Swords />}
-              title="Real-time Chess Matches"
-              description="Challenge chess players worldwide with our smooth, lag-free gaming experience. Play competitive matches anytime."
-            />
-            <FeatureCard
-              icon={<Bot />}
-              title="AI Chess Training"
-              description="Improve your chess skills with our adaptive AI that learns and grows stronger as you improve. Perfect for beginners and masters alike."
-            />
-            <FeatureCard
-              icon={<Brain />}
-              title="Chess Analytics"
-              description="Master your chess strategy with detailed game analysis, move tracking, and comprehensive performance metrics."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section - More compact */}
-      <section className="py-12 px-6" aria-label="Join ChessHub">
-        <div className="mx-auto max-w-7xl">
-          <Card className="bg-white/50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700">
-            <CardContent className="p-12">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                Ready to master online chess?
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-8">
-                Join thousands of chess enthusiasts and begin your journey to
-                becoming a stronger player. Get access to AI training, live
-                matches, and advanced analytics.
-              </p>
-              <Link title="Create Free Chess Account" href="/auth/register">
-                <Button size="lg" className="group">
-                  Create Free Account
-                  <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-      {/* Footer with Internal Links */}
-      <footer className="bg-gray-800 text-white py-6">
-        <div className="mx-auto max-w-7xl text-center">
-          <h3 className="text-xl font-semibold mb-4">Explore More</h3>
-          <div className="flex justify-center gap-6">
-            <Link href="/games" className="text-gray-300 hover:text-white">
-              Play Games
+          <div className="flex gap-4">
+            <Link
+              href="/about"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              About
             </Link>
             <Link
-              href="/tournaments"
-              className="text-gray-300 hover:text-white"
+              href="/support"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             >
-              Tournaments
+              Support
             </Link>
-            <Link href="/learn" className="text-gray-300 hover:text-white">
-              Learn Chess
+            <Link
+              href="/contact"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              Contact
             </Link>
-            <Link href="/analytics" className="text-gray-300 hover:text-white">
-              Analytics
-            </Link>
-            <Link href="/blog" className="text-gray-300 hover:text-white">
-              Chess Blog
+            <Link
+              href="/blog"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              Blog
             </Link>
           </div>
         </div>
@@ -322,7 +277,6 @@ const LandingPage = async () => {
     </main>
   );
 };
-
 const LearningCard = ({ icon, title, description, count }) => (
   <Card className="bg-white dark:bg-gray-800/50">
     <CardContent className="p-6">
@@ -335,7 +289,6 @@ const LearningCard = ({ icon, title, description, count }) => (
     </CardContent>
   </Card>
 );
-
 const GameModeCard = ({ icon, title, description }) => (
   <Card className="bg-white dark:bg-gray-800/50">
     <CardContent className="p-4">
@@ -345,7 +298,6 @@ const GameModeCard = ({ icon, title, description }) => (
     </CardContent>
   </Card>
 );
-
 const StatCard = ({ icon, value, label }) => (
   <div className="flex items-center gap-4">
     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -359,7 +311,6 @@ const StatCard = ({ icon, value, label }) => (
     </div>
   </div>
 );
-
 const FeatureCard = ({ icon, title, description }) => (
   <Card className="bg-white dark:bg-gray-800/50 border-gray-200 dark:border-gray-700">
     <CardContent className="pt-6">
@@ -373,5 +324,4 @@ const FeatureCard = ({ icon, title, description }) => (
     </CardContent>
   </Card>
 );
-
 export default LandingPage;

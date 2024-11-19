@@ -10,10 +10,6 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import "./globals.css";
 
-interface ExtendedMetadata extends Metadata {
-  canonical: string;
-}
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -24,6 +20,10 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+
+interface ExtendedMetadata extends Metadata {
+  canonical: string;
+}
 
 export const metadata: ExtendedMetadata = {
   title: "ChessHub - #1 Online Chess Platform | Play, Learn, Compete",
