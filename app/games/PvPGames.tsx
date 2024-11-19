@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Game, User } from "@prisma/client";
@@ -11,7 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Plus, Shield, User as UserIcon } from "lucide-react";
+import { Clock, Plus, Shield, User as UserIcon, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 type GameWithPlayers = Game & {
   whitePlayer: User;
@@ -23,6 +24,8 @@ type GameHomeProps = {
 };
 
 const GameHome = ({ userGames }: GameHomeProps) => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "ongoing":
@@ -35,6 +38,15 @@ const GameHome = ({ userGames }: GameHomeProps) => {
         return "bg-gray-500";
     }
   };
+
+  // Filter games based on search term
+  const filteredGames = userGames.filter((game) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      game.whitePlayer.username.toLowerCase().includes(searchLower) ||
+      game.blackPlayer.username.toLowerCase().includes(searchLower)
+    );
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -53,9 +65,21 @@ const GameHome = ({ userGames }: GameHomeProps) => {
         </Link>
       </div>
 
-      {userGames.length > 0 ? (
+      {/* Search Input */}
+      <div className="mb-6 relative">
+        <Input
+          type="text"
+          placeholder="Search games by player username"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 w-full"
+        />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+      </div>
+
+      {filteredGames.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {userGames.map((game) => (
+          {filteredGames.map((game) => (
             <Card
               key={game.id}
               className="hover:shadow-lg transition-shadow bg-sidebar"
@@ -117,14 +141,19 @@ const GameHome = ({ userGames }: GameHomeProps) => {
         <Card className="text-center py-12">
           <CardContent className="space-y-4">
             <Shield className="h-12 w-12 mx-auto text-muted-foreground" />
-            <h3 className="text-xl font-semibold">No Games Found</h3>
+            <h3 className="text-xl font-semibold">
+              {searchTerm ? "No Games Found" : "No Games Found"}
+            </h3>
             <p className="text-muted-foreground">
-              You haven&apos;t started any games yet. Create a new game to begin
-              playing!
+              {searchTerm
+                ? `No games match the search term "${searchTerm}".`
+                : "You haven't started any games yet. Create a new game to begin playing!"}
             </p>
-            <Link href="/new-game">
-              <Button className="mt-4">Start Your First Game</Button>
-            </Link>
+            {!searchTerm && (
+              <Link href="/new-game">
+                <Button className="mt-4">Start Your First Game</Button>
+              </Link>
+            )}
           </CardContent>
         </Card>
       )}
