@@ -6,6 +6,7 @@ import { ModeToggle } from "../theme-button";
 import { ArrowLeft, Users2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { usePendingFriendRequests } from "@/hooks/usePendingFriendRequests";
+import { authRoutes, publicRoutes } from "@/routes";
 
 // interface AppTopbarProps {
 //   userId: string;
@@ -13,12 +14,12 @@ import { usePendingFriendRequests } from "@/hooks/usePendingFriendRequests";
 
 export function AppTopbar() {
   const currentPath = usePathname();
-  const isAuthPage = currentPath.startsWith("/auth/");
-  const isHomePage = currentPath === "/";
+  const isPublicRoute = publicRoutes.includes(currentPath);
+  const isAuthPage = authRoutes.includes(currentPath);
   const router = useRouter();
   const { pendingCount } = usePendingFriendRequests();
 
-  if (isAuthPage || isHomePage) {
+  if (isAuthPage || isPublicRoute) {
     return null;
   }
 

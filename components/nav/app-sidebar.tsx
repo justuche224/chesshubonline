@@ -32,6 +32,7 @@ import {
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { logout } from "@/actions/logout";
 import { useRouter } from "next/navigation";
+import { authRoutes, publicRoutes } from "@/routes";
 
 type User = {
   email: string;
@@ -78,12 +79,12 @@ const items = [
 export function AppSidebar() {
   const currentPath = usePathname();
   const router = useRouter();
-  const isAuthPage = currentPath.startsWith("/auth/");
-  const isHomePage = currentPath === "/";
+  const isPublicRoute = publicRoutes.includes(currentPath);
+  const isAuthPage = authRoutes.includes(currentPath);
 
   const user: User | null = useCurrentUser();
 
-  if (isAuthPage || isHomePage) {
+  if (isAuthPage || isPublicRoute) {
     return null;
   }
 

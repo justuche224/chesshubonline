@@ -13,7 +13,6 @@ import {
   Zap,
   Crown,
   ArrowRight,
-  Gamepad,
   Trophy,
   Star,
   Book,
@@ -22,9 +21,10 @@ import {
   Clock,
 } from "lucide-react";
 import Image from "next/image";
-import { ModeToggle } from "@/components/theme-button";
 import Link from "next/link";
 import { currentUser } from "@/lib/auth";
+import Footer from "@/components/Footer";
+import PublicNav from "@/components/PublicNav";
 
 const LandingPage = async () => {
   const user = await currentUser();
@@ -35,36 +35,7 @@ const LandingPage = async () => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Navigation */}
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800"
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Image
-              width={40}
-              height={40}
-              src="/images/chesshub.png"
-              alt="ChessHub Logo"
-              className="h-10 w-10 object-contain"
-              priority
-            />
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
-              CHESSHUB
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link title="Start Playing Chess Online" href="/games">
-              <Button>
-                <Gamepad className="h-6 w-6" />
-                <span className="sr-only sm:not-sr-only">Start Playing</span>
-              </Button>
-            </Link>
-            <ModeToggle />
-          </div>
-        </div>
-      </nav>
+      <PublicNav />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden" aria-label="Hero">
@@ -294,31 +265,7 @@ const LandingPage = async () => {
         </div>
       </section>
       {/* Footer with Internal Links */}
-      <footer className="bg-gray-800 text-white py-6">
-        <div className="mx-auto max-w-7xl text-center">
-          <h3 className="text-xl font-semibold mb-4">Explore More</h3>
-          <div className="flex justify-center gap-6">
-            <Link href="/games" className="text-gray-300 hover:text-white">
-              Play Games
-            </Link>
-            <Link
-              href="/tournaments"
-              className="text-gray-300 hover:text-white"
-            >
-              Tournaments
-            </Link>
-            <Link href="/learn" className="text-gray-300 hover:text-white">
-              Learn Chess
-            </Link>
-            <Link href="/analytics" className="text-gray-300 hover:text-white">
-              Analytics
-            </Link>
-            <Link href="/blog" className="text-gray-300 hover:text-white">
-              Chess Blog
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 };
