@@ -98,42 +98,11 @@ export default function GamePage({
   //   "Nf1",
   // ];
 
-  const router = useRouter();
-
   return (
     <section className="w-full px-2">
       <div className="md:hidden">
-        <div className="w-full mt-2 flex justify-between">
-          <div className="">
-            <CircleArrowLeft
-              className="h-7 w-7"
-              onClick={() => router.back()}
-            />
-          </div>
-          <div className="md:hidden">
-            <Drawer>
-              <DrawerTrigger>
-                <MessagesSquare className="h-7 w-7" />
-              </DrawerTrigger>
-              <DrawerContent className="md:hidden">
-                <DrawerHeader>
-                  <DrawerTitle>Game Chat</DrawerTitle>
-                  <DrawerDescription>
-                    Lets be civil and respectful.
-                  </DrawerDescription>
-                  <div className="w-full rounded-md border h-[300px] bg-muted text-center">
-                    <h1>All the chat will show up here</h1>
-                  </div>
-                </DrawerHeader>
-                <DrawerFooter>
-                  {/* <Button>Submit</Button> */}
-                  <DrawerClose>
-                    <Button variant="outline">Cancel</Button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
-          </div>
+        <div className="bg-destructive text-destructive-foreground text-sm px-2 py-1 rounded">
+          This page is under construction
         </div>
         <Separator className="my-2" />
       </div>

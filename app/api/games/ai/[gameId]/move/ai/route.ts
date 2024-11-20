@@ -5,10 +5,7 @@ import { db } from "@/lib/db";
 import { pusherSever } from "@/lib/pusher";
 import { computerMove } from "@/lib/computerMove";
 
-export async function POST(
-  request: NextRequest,
-  { params }
-) {
+export async function POST(request: NextRequest, { params }) {
   try {
     const user = await currentUser();
     const { gameId } = await params;
@@ -21,7 +18,7 @@ export async function POST(
     const { aiType } = body;
 
     const game = await db.gameWithAi.findUnique({
-      where: { id: params.gameId },
+      where: { id: gameId },
       include: { moves: { orderBy: { createdAt: "asc" } } },
     });
 

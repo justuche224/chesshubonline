@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { AIType, GameWithAi } from "@prisma/client";
 import { UserWithColor } from "@/types";
 import { pusherClient } from "@/lib/pusher";
+import { useRouter } from "next/navigation";
 
 // white, black and current player should be an object with properties: id, username and color
 const ChessGame = ({
@@ -42,6 +43,7 @@ const ChessGame = ({
   const [isGameOver, setIsGameOver] = useState(false);
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [gameWinner, setGameWinner] = useState("b");
+  const router = useRouter();
 
   const lastMove = useRef(null);
 
@@ -310,6 +312,14 @@ const ChessGame = ({
         <div className="z-[9999] fixed top-0 left-0 w-screen h-[100svh] bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center text-white">
           <h2> Game Over!</h2>
           <p>{gameWinner == player.color ? player.username : aiType} wins</p>
+          <button
+            className="mt-4 px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 rounded-md"
+            onClick={() => {
+              router.push("/games");
+            }}
+          >
+            Back to Games
+          </button>
         </div>
       )}
       <div className="mx-auto">
