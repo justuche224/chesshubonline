@@ -69,7 +69,9 @@ const PvPAiGames = ({ userGamesWithAi }: GameAiHomeProps) => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">AI Games</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-left">
+            AI Games
+          </h1>
           <p className="text-muted-foreground">
             Challenge yourself against different AI opponents
           </p>

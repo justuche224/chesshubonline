@@ -4,7 +4,7 @@ import UserList from "./UserList";
 import AIList from "./AiList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const NewGamePage = ({ otherUsers, user }) => {
+const NewGamePage = ({ otherUsers, user, friends }) => {
   const [activeTab, setActiveTab] = useState("player");
 
   useEffect(() => {
@@ -31,7 +31,11 @@ const NewGamePage = ({ otherUsers, user }) => {
           <TabsTrigger value="ai">Play with AI</TabsTrigger>
         </TabsList>
         <TabsContent value="player">
-          <UserList otherUsers={otherUsers} userId={user.id} />
+          <UserList
+            otherUsers={otherUsers}
+            userId={user.id}
+            friends={friends}
+          />
         </TabsContent>
         <TabsContent value="ai">
           <AIList userId={user.id} />

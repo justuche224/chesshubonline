@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "../theme-button";
-import { Users2 } from "lucide-react";
+import { ArrowLeft, Users2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { usePendingFriendRequests } from "@/hooks/usePendingFriendRequests";
 
@@ -28,16 +28,19 @@ export function AppTopbar() {
       className="w-full border-b flex justify-between items-center px-2 py-2 text-xl bg-sidebar/20 backdrop-blur-lg sticky top-0 z-[9998]"
     >
       <div className="flex items-center gap-2">
-        <div className="">
-          <SidebarTrigger className="md:hidden" />
-        </div>
+        <Button className="h-9 w-10" onClick={() => router.back()}>
+          <ArrowLeft />
+        </Button>
         <div className="cursor-pointer" onClick={() => router.push("/")}>
           CHESSHUB
         </div>
       </div>
       <div className="flex gap-2 items-center">
+        <div className="z-[9999]">
+          <ModeToggle />
+        </div>
         <div className="relative">
-          <Button onClick={() => router.push("/friends")}>
+          <Button className="h-9 w-10" onClick={() => router.push("/friends")}>
             <Users2 />
           </Button>
           {pendingCount > 0 && (
@@ -46,8 +49,8 @@ export function AppTopbar() {
             </div>
           )}
         </div>
-        <div className="z-[9999]">
-          <ModeToggle />
+        <div className="">
+          <SidebarTrigger className="md:hidden" />
         </div>
       </div>
     </div>

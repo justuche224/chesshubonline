@@ -1,22 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CircleArrowLeft, MessagesSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Chessgame from "./Chessgame";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-// import MovesDisplay from "./MovesDisplay";
-import { useRouter } from "next/navigation";
 import Chat from "./Chat";
 
 export default function GamePage({
@@ -25,44 +11,6 @@ export default function GamePage({
   currentPlayer,
   initialGame,
 }) {
-  // const player1Moves = [
-  //   "e4",
-  //   "Nf3",
-  //   "Bb5",
-  //   "Ba4",
-  //   "O-O",
-  //   "Re1",
-  //   "Bb3",
-  //   "c3",
-  //   "h3",
-  //   "d4",
-  //   "Nbd2",
-  //   "Bc2",
-  //   "a4",
-  //   "b4",
-  //   "d5",
-  //   "Nf1",
-  // ];
-
-  // const player2Moves = [
-  //   "e4",
-  //   "Nf3",
-  //   "Bb5",
-  //   "Ba4",
-  //   "O-O",
-  //   "Re1",
-  //   "Bb3",
-  //   "c3",
-  //   "h3",
-  //   "d4",
-  //   "Nbd2",
-  //   "Bc2",
-  //   "a4",
-  //   "b4",
-  //   "d5",
-  //   "Nf1",
-  // ];
-
   const [status, setStatus] = useState({});
   const [boardWidth, setBoardWidth] = useState(0);
 
@@ -87,42 +35,13 @@ export default function GamePage({
     return () => window.removeEventListener("resize", calculateBoardSize);
   }, []);
 
-  const router = useRouter();
-
   return (
     <section className="w-full px-2">
       <div className="md:hidden">
         <div className="w-full mt-2 flex justify-between">
-          <div className="">
-            <CircleArrowLeft
-              className="h-7 w-7"
-              onClick={() => router.back()}
-            />
-          </div>
-          <div className="md:hidden">
-            <Drawer>
-              <DrawerTrigger>
-                <MessagesSquare className="h-7 w-7" />
-              </DrawerTrigger>
-              <DrawerContent className="md:hidden">
-                <DrawerHeader>
-                  <DrawerTitle>Game Chat</DrawerTitle>
-                  <DrawerDescription>
-                    Lets be civil and respectful.
-                  </DrawerDescription>
-                  <Chat
-                    initialGame={initialGame}
-                    currentPlayer={currentPlayer}
-                  />
-                </DrawerHeader>
-                <DrawerFooter>
-                  {/* <Button>Submit</Button> */}
-                  <DrawerClose>
-                    <Button variant="outline">Close</Button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
+          <div className="bg-destructive text-destructive-foreground text-sm px-2 py-1 rounded">
+            if the game or chat looks out of place or frozen please refresh the
+            page
           </div>
         </div>
         <Separator className="my-3" />
@@ -189,11 +108,10 @@ export default function GamePage({
         {/* Moves and chats coloumn */}
         <div className="w-full lg:w-[45%] mt-3 flex flex-col space-y-3 px-3">
           {/* Chat */}
-          <div className="hidden md:block">
+          <div className="flex justify-center flex-col gap-2">
+            <h2 className="text-center">Game Chat</h2>
+            <h3 className="text-center">Lets be civil and respectful.</h3>
             <Chat initialGame={initialGame} currentPlayer={currentPlayer} />
-          </div>
-          <div className="bg-destructive text-destructive-foreground px-2 py-1 rounded">
-            if the gane or chat looks out of place then refresh the page
           </div>
         </div>
       </section>

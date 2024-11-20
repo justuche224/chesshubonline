@@ -52,7 +52,9 @@ const GameHome = ({ userGames }: GameHomeProps) => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">My Games</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-left">
+            My Games
+          </h1>
           <p className="text-muted-foreground">
             Manage and track your ongoing and completed chess matches
           </p>

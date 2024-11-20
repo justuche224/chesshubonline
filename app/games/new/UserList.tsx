@@ -12,14 +12,19 @@ import {
   ChevronRight,
   LoaderCircle,
   Search,
+  Users,
+  Globe,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type UserListProps = {
   otherUsers: User[];
   userId: string;
+  friends: User[];
 };
 
 const UserCard = ({
@@ -31,6 +36,7 @@ const UserCard = ({
   onStartMatch: () => void;
   isLoading: boolean;
 }) => {
+  const router = useRouter();
   const joinDate = new Date(user.createdAt).toLocaleDateString("en-US", {
     month: "short",
     year: "numeric",
@@ -50,7 +56,8 @@ const UserCard = ({
                   height={80}
                   src={user.image || "/images/user-placeholder.png"}
                   alt={user.username}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover cursor-pointer"
+                  onClick={() => router.push(`/profile/${user.username}`)}
                 />
               </div>
               <div
@@ -62,7 +69,12 @@ const UserCard = ({
             {/* Username and Role - Mobile Layout */}
             <div className="sm:hidden flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-lg font-semibold">{user.username}</h3>
+                <h3
+                  className="text-lg font-semibold cursor-pointer"
+                  onClick={() => router.push(`/profile/${user.username}`)}
+                >
+                  {user.username}
+                </h3>
                 <span
                   className={`px-2 py-0.5 text-xs rounded-full ${
                     user.role === "USER"
@@ -161,9 +173,10 @@ const UserCard = ({
   );
 };
 
-const UserList = ({ otherUsers, userId }: UserListProps) => {
+const UserList = ({ otherUsers, userId, friends }: UserListProps) => {
   const [loading, setLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [activeTab, setActiveTab] = useState("all");
 
   const handleStartMatch = async (opponentId: string) => {
     setLoading(opponentId);
@@ -198,10 +211,23 @@ const UserList = ({ otherUsers, userId }: UserListProps) => {
     }
   };
 
-  // Filter users based on search term
-  const filteredUsers = otherUsers.filter((user) =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter users based on search term and active tab
+  const getFilteredUsers = () => {
+    const searchFilter = (user: User) =>
+      user.username.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (activeTab === "friends") {
+      return friends.filter(searchFilter);
+    } else {
+      // Filter out friends from other users
+      const friendIds = new Set(friends.map((friend) => friend.id));
+      return otherUsers
+        .filter((user) => !friendIds.has(user.id))
+        .filter(searchFilter);
+    }
+  };
+
+  const filteredUsers = getFilteredUsers();
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6">
@@ -222,44 +248,94 @@ const UserList = ({ otherUsers, userId }: UserListProps) => {
         </div>
       </div>
 
-      {/* Search Input */}
-      <div className="mb-4 relative">
-        <Input
-          type="text"
-          placeholder="Search players by username"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10"
-        />
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-      </div>
+      <Tabs
+        defaultValue="friends"
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="mb-6"
+      >
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="all" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            All Players
+          </TabsTrigger>
+          <TabsTrigger value="friends" className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            Friends ({friends.length})
+          </TabsTrigger>
+        </TabsList>
 
-      {filteredUsers.length > 0 ? (
-        <div className="space-y-4">
-          {filteredUsers.map((user) => (
-            <UserCard
-              key={user.id}
-              user={user}
-              isLoading={loading === user.id}
-              onStartMatch={() => handleStartMatch(user.id)}
-            />
-          ))}
+        <div className="mb-4 relative">
+          <Input
+            type="text"
+            placeholder={`Search ${
+              activeTab === "friends" ? "friends" : "players"
+            } by username`}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
-      ) : (
-        <Card className="p-6 sm:p-12 text-center">
-          <UserIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">
-            {searchTerm ? "No Players Found" : "No Players Available"}
-          </h3>
-          <p className="text-gray-500 text-sm sm:text-base">
-            {searchTerm
-              ? `No users match the search term "${searchTerm}".`
-              : "There are no other users available to play with at the moment. Please check back later."}
-          </p>
-        </Card>
-      )}
+
+        <TabsContent value="all">
+          {filteredUsers.length > 0 ? (
+            <div className="space-y-4">
+              {filteredUsers.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  isLoading={loading === user.id}
+                  onStartMatch={() => handleStartMatch(user.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState type="all" searchTerm={searchTerm} />
+          )}
+        </TabsContent>
+
+        <TabsContent value="friends">
+          {filteredUsers.length > 0 ? (
+            <div className="space-y-4">
+              {filteredUsers.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  isLoading={loading === user.id}
+                  onStartMatch={() => handleStartMatch(user.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState type="friends" searchTerm={searchTerm} />
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
+
+const EmptyState = ({ type, searchTerm }) => (
+  <Card className="p-6 sm:p-12 text-center">
+    <UserIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+    <h3 className="text-lg font-semibold mb-2">
+      {searchTerm
+        ? "No Players Found"
+        : type === "friends"
+        ? "No Friends Yet"
+        : "No Players Available"}
+    </h3>
+    <p className="text-gray-500 text-sm sm:text-base">
+      {searchTerm
+        ? `No ${
+            type === "friends" ? "friends" : "users"
+          } match the search term "${searchTerm}".`
+        : type === "friends"
+        ? "Add some friends to challenge them to a game!"
+        : "There are no other users available to play with at the moment. Please check back later."}
+    </p>
+  </Card>
+);
 
 export default UserList;
