@@ -37,7 +37,7 @@ const ConversationsPage = async () => {
   // Fallback UI for no conversations
   if (conversations.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] text-center p-6">
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] text-center p-6 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <MessageCircleIcon
           className="w-24 h-24 text-gray-300 mb-6"
           strokeWidth={1}
@@ -65,7 +65,7 @@ const ConversationsPage = async () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <h1 className="text-2xl font-bold mb-4">Conversations</h1>
       <ScrollArea className="h-[calc(100vh-100px)] w-full">
         <div className="space-y-3">
