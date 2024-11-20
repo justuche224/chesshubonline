@@ -9,10 +9,10 @@ export async function POST(
 ) {
   try {
     const user = await currentUser();
-    console.log("user found", user);
+    // console.log("user found", user);
 
     const { gameId } = await params;
-    console.log("gameId", gameId);
+    // console.log("gameId", gameId);
 
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -21,7 +21,7 @@ export async function POST(
     const body = await request.json();
     const { message } = body;
 
-    console.log("message", message);
+    // console.log("message", message);
 
     if (!message || typeof message !== "string") {
       return new NextResponse("Invalid message", { status: 400 });

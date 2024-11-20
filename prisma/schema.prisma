@@ -37,26 +37,29 @@ enum RequestStatus {
 }
 
 model User {
-  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
-  firstname          String
-  lastname           String
-  username           String          @unique
-  gender             gender
-  email              String          @unique
-  password           String
-  emailVerified      DateTime?
-  image              String?
-  role               UserRole        @default(USER)
-  gamesAsWhitePlayer Game[]          @relation("whitePlayer")
-  gamesAsBlackPlayer Game[]          @relation("blackPlayer")
-  gamesWithAi        GameWithAi[]    @relation("playerAiGames")
-  friends1           Friendship[]    @relation("user1Friends")
-  friends2           Friendship[]    @relation("user2Friends")
-  sentRequests       FriendRequest[] @relation("sentFriendRequests")
-  receivedRequests   FriendRequest[] @relation("receivedFriendRequests")
-  sentMessages       Message[]       @relation("sentMessages")
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
+  id                   String                @id @default(auto()) @map("_id") @db.ObjectId
+  firstname            String
+  lastname             String
+  username             String                @unique
+  gender               gender
+  email                String                @unique
+  password             String
+  emailVerified        DateTime?
+  image                String?
+  role                 UserRole              @default(USER)
+  gamesAsWhitePlayer   Game[]                @relation("whitePlayer")
+  gamesAsBlackPlayer   Game[]                @relation("blackPlayer")
+  gamesWithAi          GameWithAi[]          @relation("playerAiGames")
+  friends1             Friendship[]          @relation("user1Friends")
+  friends2             Friendship[]          @relation("user2Friends")
+  sentRequests         FriendRequest[]       @relation("sentFriendRequests")
+  receivedRequests     FriendRequest[]       @relation("receivedFriendRequests")
+  sentMessages         Message[]             @relation("sentMessages")
+  conversations1       Conversation[]        @relation("user1Conversations")
+  conversations2       Conversation[]        @relation("user2Conversations")
+  conversationMessages ConversationMessage[] @relation("sentConversationMessages")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 }
 
 model VerificationToken {
@@ -160,4 +163,27 @@ model Message {
   sender    User     @relation("sentMessages", fields: [senderId], references: [id])
   content   String
   createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id        String                @id @default(auto()) @map("_id") @db.ObjectId
+  user1Id   String                @db.ObjectId
+  user1     User                  @relation("user1Conversations", fields: [user1Id], references: [id])
+  user2Id   String                @db.ObjectId
+  user2     User                  @relation("user2Conversations", fields: [user2Id], references: [id])
+  messages  ConversationMessage[]
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@unique([user1Id, user2Id])
+}
+
+model ConversationMessage {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String       @db.ObjectId
+  sender         User         @relation("sentConversationMessages", fields: [senderId], references: [id])
+  content        String
+  createdAt      DateTime     @default(now())
 }
