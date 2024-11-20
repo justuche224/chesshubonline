@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { pusherClient } from "@/lib/pusher";
-
 import {
   mergeStyles,
   grayedOutStyles,
@@ -19,7 +18,6 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-// white, black and current player should be an object with properties: id, username and color
 const Chessgame = ({
   onStatusChange,
   initialGame,
@@ -38,8 +36,35 @@ const Chessgame = ({
   const [gameWinner, setGameWinner] = useState("b");
 
   const lastMove = useRef(null);
-
   const router = useRouter();
+
+  // Check game status after every move
+  const checkGameStatus = (currentGame) => {
+    console.log("checking game status");
+
+    const isCheckmate = currentGame.isCheckmate();
+    const isDraw = currentGame.isDraw();
+    const isStalemate = currentGame.isStalemate();
+    const isInsufficientMaterial = currentGame.isInsufficientMaterial();
+    const isThreefoldRepetition = currentGame.isThreefoldRepetition();
+
+    if (isCheckmate) {
+      setGameWinner(currentGame.turn() === "w" ? "b" : "w");
+      setGameOverMessage("Checkmate!");
+      setIsGameOver(true);
+    } else if (isDraw) {
+      setGameOverMessage(
+        isStalemate
+          ? "Draw by Stalemate!"
+          : isInsufficientMaterial
+          ? "Draw by Insufficient Material!"
+          : isThreefoldRepetition
+          ? "Draw by Threefold Repetition!"
+          : "Draw!"
+      );
+      setIsGameOver(true);
+    }
+  };
 
   const sendMoveToServer = async (move) => {
     try {
@@ -63,65 +88,47 @@ const Chessgame = ({
 
   useEffect(() => {
     if (!whitePlayer.id || !blackPlayer.id) return;
-
     toast.info(`You are ${currentPlayer.color === "w" ? "White" : "Black"}`);
   }, [currentPlayer, whitePlayer, blackPlayer]);
-
-  useEffect(() => {
-    const isCheckmate = game.isCheckmate();
-    const isDraw = game.isDraw();
-
-    if (isCheckmate || isDraw) {
-      if (isDraw) {
-        setGameOverMessage("Draw!");
-      } else if (isCheckmate) {
-        setGameWinner(game.turn() === "w" ? "b" : "w");
-        setGameOverMessage("Checkmate!");
-      }
-      setIsGameOver(true);
-    }
-  }, [game]);
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`game-${initialGame.id}`);
 
     channel.bind("move", (data) => {
       const { move, fen } = data;
-
-      // Ignore the move if it's the same as the last move made by the current player
       if (lastMove.current?.san === move.san) return;
 
-      game.move(move);
-      setGame(new Chess(fen));
-      handleGameStatusUpdate();
+      const newGame = new Chess(fen);
+      setGame(newGame);
+      checkGameStatus(newGame);
+      handleGameStatusUpdate(newGame);
     });
 
     return () => {
       pusherClient.unsubscribe(`game-${initialGame.id}`);
     };
-  }, [initialGame.id, game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialGame.id]);
 
   function onSquareClick(square) {
-    if (gameStatus.gameOver) return;
+    if (isGameOver) return;
 
     if (game.turn() !== currentPlayer.color) {
       toast.error("It's not your turn!");
       return;
     }
 
-    // Toggle and highlight possible moves. quit and return the function if setting toggle state to true
     if (highlightAvailableMoves(square)) {
       return;
     }
 
     const nextMoves = game
       .moves({ selectedSquare, verbose: true })
-      .filter((move) => move.from == selectedSquare && move.to == square);
+      .filter((move) => move.from === selectedSquare && move.to === square);
 
-    // Check for promotion
     if (nextMoves.some((move) => move.promotion)) {
       setPromotionMoves(nextMoves);
-      handleGameStatusUpdate();
+      handleGameStatusUpdate(game);
       return;
     }
 
@@ -131,17 +138,25 @@ const Chessgame = ({
   function movePiece(move) {
     if (!move) return;
 
-    game.move(move);
+    const newGame = new Chess(game.fen());
+    newGame.move(move);
+
+    setGame(newGame);
     setAvailableMoves([]);
     setSelectedSquare("");
-    // Save the last move made by the current player
     lastMove.current = move;
     sendMoveToServer(move);
+
+    // Check game status immediately after making a move
+    checkGameStatus(newGame);
+    handleGameStatusUpdate(newGame);
   }
 
   function onPromotionPieceSelect(piece) {
     const promoteTo = piece[1].toLowerCase() ?? "q";
-    const nextMove = promotionMoves.find((move) => move.promotion == promoteTo);
+    const nextMove = promotionMoves.find(
+      (move) => move.promotion === promoteTo
+    );
 
     movePiece(nextMove);
     setPromotionMoves([]);
@@ -149,8 +164,8 @@ const Chessgame = ({
 
   function onSquareRightClick(square) {
     setRightClickedSquares((rcs) => {
-      const newrcs = rcs.filter((s) => s != square);
-      if (newrcs.length == rcs.length) newrcs.push(square);
+      const newrcs = rcs.filter((s) => s !== square);
+      if (newrcs.length === rcs.length) newrcs.push(square);
       return newrcs;
     });
   }
@@ -159,7 +174,7 @@ const Chessgame = ({
     setRightClickedSquares([]);
 
     const isPieceHighlightable =
-      game.get(square)?.color == game.turn() && square != selectedSquare;
+      game.get(square)?.color === game.turn() && square !== selectedSquare;
 
     setSelectedSquare(isPieceHighlightable ? square : "");
     setAvailableMoves(
@@ -169,60 +184,63 @@ const Chessgame = ({
     return isPieceHighlightable;
   }
 
-  function handleGameStatusUpdate() {
-    const isCheckmate = game.isCheckmate();
-    const isInCheck = game.inCheck();
-    const hasLegalMoves = game.moves().length > 0;
+  function handleGameStatusUpdate(currentGame) {
+    const gameToCheck = currentGame || game;
+    const isCheckmate = gameToCheck.isCheckmate();
+    const isInCheck = gameToCheck.inCheck();
+    const hasLegalMoves = gameToCheck.moves().length > 0;
 
-    let status = {
+    const status = {
       gameOver: isCheckmate || !hasLegalMoves,
-      history: game.history({ verbose: true }),
+      history: gameToCheck.history({ verbose: true }),
       gameState: isCheckmate
         ? "checkmate"
         : isInCheck
         ? "in check"
-        : game.isStalemate()
+        : gameToCheck.isStalemate()
         ? "stalemate"
-        : game.isInsufficientMaterial()
+        : gameToCheck.isInsufficientMaterial()
         ? "insufficient material"
-        : game.isThreefoldRepetition()
+        : gameToCheck.isThreefoldRepetition()
         ? "threefold repetition"
-        : game.isDraw()
+        : gameToCheck.isDraw()
         ? "50-move rule"
         : promotionMoves.length > 0
-        ? `promote`
+        ? "promote"
         : "normal",
     };
 
     switch (status.gameState) {
       case "checkmate":
         status.message = `${
-          game.turn() === "w" ? "Black" : "White"
+          gameToCheck.turn() === "w" ? "Black" : "White"
         } wins by Checkmate`;
-        status.winner = game.turn() === "w" ? "b" : "w";
+        status.winner = gameToCheck.turn() === "w" ? "b" : "w";
         break;
       case "in check":
         status.message = `${
-          game.turn() === "w" ? "White" : "Black"
+          gameToCheck.turn() === "w" ? "White" : "Black"
         } is in check.`;
         break;
       case "stalemate":
         status.message = "The game is a draw by stalemate.";
         break;
       default:
-        status.message = `${game.turn() === "w" ? "White" : "Black"}'s move.`;
+        status.message = `${
+          gameToCheck.turn() === "w" ? "White" : "Black"
+        }'s move.`;
         break;
     }
 
-    // Set the game status and notify the parent component if needed
     setGameStatus(status);
     onStatusChange?.(status);
   }
 
   const gameBoard = game.board().flat();
   const currentPlayerKing = gameBoard.find(
-    (square) => square?.type == "k" && square?.color == game.turn()
+    (square) => square?.type === "k" && square?.color === game.turn()
   );
+
   return (
     <>
       {isGameOver && (
@@ -253,8 +271,8 @@ const Chessgame = ({
           arePiecesDraggable={false}
           onSquareClick={onSquareClick}
           onSquareRightClick={onSquareRightClick}
-          getPositionObject={handleGameStatusUpdate}
-          boardOrientation={currentPlayer.color == "w" ? "white" : "black"}
+          getPositionObject={() => handleGameStatusUpdate(game)}
+          boardOrientation={currentPlayer.color === "w" ? "white" : "black"}
           customBoardStyle={{
             borderRadius: "4px",
             boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
@@ -262,15 +280,15 @@ const Chessgame = ({
           customSquareStyles={{
             ...mergeStyles(
               gameBoard
-                .filter((square) => square && square.color != game.turn())
+                .filter((square) => square && square.color !== game.turn())
                 .map((square) => square.square),
               grayedOutStyles
             ),
             [currentPlayerKing.square]:
-              gameStatus.gameState == "checkmate" ||
-              gameStatus.gameState == "in check"
+              gameStatus.gameState === "checkmate" ||
+              gameStatus.gameState === "in check"
                 ? checkStyles
-                : gameStatus.gameState == "stalemate"
+                : gameStatus.gameState === "stalemate"
                 ? staleStyles
                 : {},
             ...mergeStyles(
@@ -293,9 +311,7 @@ const Chessgame = ({
               highlightedCapturedStyles
             ),
             ...mergeStyles(
-              gameStatus.gameOver
-                ? gameBoard.map((square) => square?.square)
-                : [],
+              isGameOver ? gameBoard.map((square) => square?.square) : [],
               grayedOutStyles
             ),
           }}

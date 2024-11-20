@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import GamePage from "./Test";
+import GamePage from "./GamePage";
 import { currentUser } from "@/lib/auth";
 
 const page = async ({ params }) => {
