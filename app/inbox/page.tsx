@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import NewConversationButton from "./NewConversationButton"
 
 const ConversationsPage = async () => {
   const currentUser = await getCurrentUser();
@@ -126,6 +127,7 @@ const ConversationsPage = async () => {
           })}
         </div>
       </ScrollArea>
+      <NewConversationButton/>
     </div>
   );
 };
