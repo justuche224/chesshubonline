@@ -40,7 +40,7 @@ const Chessgame = ({
 
   // Check game status after every move
   const checkGameStatus = (currentGame) => {
-    console.log("checking game status");
+    // console.log("checking game status");
 
     const isCheckmate = currentGame.isCheckmate();
     const isDraw = currentGame.isDraw();

@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Chess, Move } from "chess.js";
+import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import pieces from "./pieces";
 
 import {
   mergeStyles,
@@ -17,13 +16,11 @@ import {
   staleStyles,
 } from "./square-styles";
 import { toast } from "sonner";
-import { AIType, GameWithAi } from "@prisma/client";
-import { UserWithColor } from "@/types";
 import { pusherClient } from "@/lib/pusher";
 import { useRouter } from "next/navigation";
 
 // white, black and current player should be an object with properties: id, username and color
-const ChessGame = ({
+const AiChessGame = ({
   onStatusChange,
   initialGame,
   player,
@@ -38,6 +35,7 @@ const ChessGame = ({
   const [selectedSquare, setSelectedSquare] = useState("");
   const [rightClickedSquares, setRightClickedSquares] = useState([]);
   const [promotionMoves, setPromotionMoves] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAIThinking, setIsAIThinking] = useState(false);
   const [isMoveInProgress, setIsMoveInProgress] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -48,18 +46,8 @@ const ChessGame = ({
   const lastMove = useRef(null);
 
   useEffect(() => {
-    console.log(game.isGameOver());
-
     if (game.isGameOver()) {
-      if (game.isDraw()) {
-        setGameOverMessage("Draw!");
-      }
-
-      if (game.isCheckmate()) {
-        setGameWinner(game.turn() === "w" ? "b" : "w");
-        setGameOverMessage("Checkmate!");
-      }
-      setIsGameOver(true);
+      checkGameStatus(game);
     }
   }, [game]);
 
@@ -67,7 +55,7 @@ const ChessGame = ({
     if (!player.id) return;
 
     toast.info(`You are ${currentPlayer.color === "w" ? "White" : "Black"}`);
-  }, [player]);
+  }, [currentPlayer.color, player]);
 
   useEffect(() => {
     if (
@@ -77,6 +65,7 @@ const ChessGame = ({
     ) {
       makeAIMove();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.turn(), isMoveInProgress]);
 
   useEffect(() => {
@@ -90,12 +79,14 @@ const ChessGame = ({
 
       game.move(move);
       setGame(new Chess(fen));
+      checkGameStatus(game);
       handleGameStatusUpdate();
     });
 
     return () => {
       pusherClient.unsubscribe(`game-${initialGame.id}`);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialGame.id, game]);
 
   const makeAIMove = async () => {
@@ -196,6 +187,8 @@ const ChessGame = ({
     // Save the last move made by the current player
     lastMove.current = move;
     sendMoveToServer(move);
+    checkGameStatus(game);
+    handleGameStatusUpdate();
   }
 
   function onPromotionPieceSelect(piece) {
@@ -214,24 +207,56 @@ const ChessGame = ({
     });
   }
 
-  function handleGameStatusUpdate() {
-    const previousPlayer = game.turn() === "w" ? "Black" : "White";
-    const currentPlayer = game.turn() === "w" ? "White" : "Black";
+  const checkGameStatus = (currentGame) => {
+    const isCheckmate = currentGame.isCheckmate();
+    const isDraw = currentGame.isDraw();
+    const isStalemate = currentGame.isStalemate();
+    const isInsufficientMaterial = currentGame.isInsufficientMaterial();
+    const isThreefoldRepetition = currentGame.isThreefoldRepetition();
 
-    let status = {
-      gameOver: false,
-      history: game.history({ verbose: true }),
-      gameState: game.isCheckmate()
+    if (isCheckmate) {
+      // The winner is the opposite of the current turn
+      // (since checkmate means the current player has lost)
+      const winner = currentGame.turn() === "w" ? "b" : "w";
+      setGameWinner(winner);
+      setGameOverMessage("Checkmate!");
+      setIsGameOver(true);
+    } else if (isDraw) {
+      // More detailed draw messages
+      let drawReason = "Draw!";
+      if (isStalemate) {
+        drawReason = "Draw by Stalemate!";
+      } else if (isInsufficientMaterial) {
+        drawReason = "Draw by Insufficient Material!";
+      } else if (isThreefoldRepetition) {
+        drawReason = "Draw by Threefold Repetition!";
+      }
+
+      setGameOverMessage(drawReason);
+      setIsGameOver(true);
+    }
+  };
+
+  function handleGameStatusUpdate() {
+    const gameToCheck = game;
+    const isCheckmate = gameToCheck.isCheckmate();
+    const isInCheck = gameToCheck.inCheck();
+    const hasLegalMoves = gameToCheck.moves().length > 0;
+
+    const status = {
+      gameOver: isCheckmate || !hasLegalMoves,
+      history: gameToCheck.history({ verbose: true }),
+      gameState: isCheckmate
         ? "checkmate"
-        : game.inCheck()
+        : isInCheck
         ? "in check"
-        : game.isStalemate()
+        : gameToCheck.isStalemate()
         ? "stalemate"
-        : game.isInsufficientMaterial()
+        : gameToCheck.isInsufficientMaterial()
         ? "insufficient material"
-        : game.isThreefoldRepetition()
+        : gameToCheck.isThreefoldRepetition()
         ? "threefold repetition"
-        : game.isDraw()
+        : gameToCheck.isDraw()
         ? "50-move rule"
         : promotionMoves.length > 0
         ? "promote"
@@ -240,66 +265,38 @@ const ChessGame = ({
 
     switch (status.gameState) {
       case "checkmate":
-        status.message = `${previousPlayer} wins by Checkmate`;
-        status.gameOver = true;
-        status.winner = game.turn();
+        status.message = `${
+          gameToCheck.turn() === "w" ? "Black" : "White"
+        } wins by Checkmate`;
+        status.winner = gameToCheck.turn() === "w" ? "b" : "w";
         break;
       case "in check":
-        status.message = `${currentPlayer} is in check. ${currentPlayer}'s move`;
+        status.message = `${
+          gameToCheck.turn() === "w" ? "White" : "Black"
+        } is in check.`;
         break;
       case "stalemate":
-        status.message =
-          "The game is a draw by Stalemate. Neither player can make a valid move.";
-        status.gameOver = true;
+        status.message = "The game is a draw by stalemate.";
         break;
       case "insufficient material":
-        status.message =
-          "The game is a draw due to Insufficient Material. Neither side can force a checkmate.";
-        status.gameOver = true;
+        status.message = "The game is a draw due to insufficient material.";
         break;
       case "threefold repetition":
-        status.message =
-          "The game is a draw by threefold repetition. The same position has occurred three times, leading to an automatic draw.";
-        status.gameOver = true;
+        status.message = "The game is a draw by threefold repetition.";
         break;
       case "50-move rule":
-        status.message =
-          "The game is a draw by the 50-Move Rule. 50 moves passed without a pawn move or capture.";
-        status.gameOver = true;
-        break;
-      case "promote":
-        status.message = `${currentPlayer}'s pawn has reached the last rank! Promote to continue.`;
+        status.message = "The game is a draw by the 50-move rule.";
         break;
       default:
-        status.gameOver = false;
-        status.message = `${currentPlayer}'s move`;
+        status.message = `${
+          gameToCheck.turn() === "w" ? "White" : "Black"
+        }'s move.`;
+        break;
     }
 
-    // Set game status state whenever we request for the game status
     setGameStatus(status);
-    // Call onStatusChange prop function with the status if it exists
     onStatusChange?.(status);
     return status;
-  }
-
-  function renderPieceCapturedBy(color) {
-    const capturedPieces = game
-      .history({ verbose: true })
-      ?.filter((move) => move.captured && move.color == color);
-
-    return (
-      <div className="captured-container w-full bg-slate-500/70 rounded shadow-lg my-2 mx-auto flex flex-wrap justify-center items-center">
-        {capturedPieces.map(
-          (move) => pieces[(color == "w" ? "b" : "w") + move.captured]
-        )}
-
-        {capturedPieces.length == 0 && (
-          <p className="text-sm p-2">
-            Captured {color == "w" ? "black" : "white"} pieces will appear here.
-          </p>
-        )}
-      </div>
-    );
   }
 
   const gameBoard = game.board().flat();
@@ -310,16 +307,19 @@ const ChessGame = ({
     <>
       {isGameOver && (
         <div className="z-[9999] fixed top-0 left-0 w-screen h-[100svh] bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center text-white">
-          <h2> Game Over!</h2>
-          <p>{gameWinner == player.color ? player.username : aiType} wins</p>
-          <button
-            className="mt-4 px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 rounded-md"
-            onClick={() => {
-              router.push("/games");
-            }}
-          >
-            Back to Games
-          </button>
+          <div className="bg-sidebar w-full max-w-md p-4 rounded-md grid place-content-center h-[200px] text-center">
+            <h2> Game Over!</h2>
+            <p>{gameWinner == player.color ? player.username : aiType} wins</p>
+            <p>{gameOverMessage}</p>
+            <button
+              className="mt-4 px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 rounded-md"
+              onClick={() => {
+                router.push("/games");
+              }}
+            >
+              Back to Games
+            </button>
+          </div>
         </div>
       )}
       <div className="mx-auto">
@@ -385,4 +385,4 @@ const ChessGame = ({
   );
 };
 
-export default ChessGame;
+export default AiChessGame;
