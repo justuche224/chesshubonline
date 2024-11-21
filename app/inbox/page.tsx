@@ -8,7 +8,7 @@ import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import NewConversationButton from "./NewConversationButton"
+import NewConversationButton from "./NewConversationButton";
 
 const ConversationsPage = async () => {
   const currentUser = await getCurrentUser();
@@ -68,8 +68,8 @@ const ConversationsPage = async () => {
   return (
     <div className="container mx-auto p-4 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <h1 className="text-2xl font-bold mb-4">Conversations</h1>
-      <ScrollArea className="h-[calc(100vh-100px)] w-full">
-        <div className="space-y-3">
+      <ScrollArea className="h-[calc(100svh-100px)] w-full">
+        <div className="space-y-3 flex flex-col gap-1">
           {conversations.map((conversation) => {
             // Determine the other user in the conversation
             const otherUser =
@@ -127,7 +127,7 @@ const ConversationsPage = async () => {
           })}
         </div>
       </ScrollArea>
-      <NewConversationButton/>
+      <NewConversationButton />
     </div>
   );
 };
