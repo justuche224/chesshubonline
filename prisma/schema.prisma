@@ -99,7 +99,7 @@ model GameWithAi {
 model Game {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   fen           String // FEN string to represent board state
-  status        String // Game status ("ongoing", "checkmate", "draw", etc.)
+  status        String // Game status ("active", "checkmate", "draw", etc.)
   whitePlayerId String    @db.ObjectId
   whitePlayer   User      @relation("whitePlayer", fields: [whitePlayerId], references: [id])
   blackPlayerId String    @db.ObjectId

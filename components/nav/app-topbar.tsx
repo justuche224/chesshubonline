@@ -26,7 +26,7 @@ export function AppTopbar() {
   return (
     <div
       id="top-bar"
-      className="w-full border-b flex justify-between items-center px-2 py-2 text-xl bg-sidebar/20 backdrop-blur-lg sticky top-0 z-[9998]"
+      className="w-full border-b flex justify-between items-center px-2 py-2 text-xl bg-sidebar sticky top-0 z-[9998]"
     >
       <div className="flex items-center gap-2">
         <Button className="h-9 w-10" onClick={() => router.back()}>

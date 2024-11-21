@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import ChatPage from "./ChatPage";
 
 const page = async ({ params }) => {
-  const { chatId } = params;
+  const { chatId } = await params;
   const user = await currentUser();
 
   if (!user) {

@@ -2,6 +2,7 @@ import { Chess } from "chess.js";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { AIType } from "@prisma/client";
+import logger from "@/utils/logger";
 
 // Type for the request body
 type CreateGameRequest = {
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as CreateGameRequest;
     const { player1Id, player2Id, gameType, aiType } = body;
-    console.log(body);
+    logger.log(body);
 
     // Validate required fields
     if (!player1Id || !gameType) {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Initialize new chess game
     const chess = new Chess();
-    console.log("game instance created", chess.fen());
+    logger.log("game instance created", chess.fen());
 
     // Create AI game
     if (gameType === "AI") {
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
           status: 400,
         });
       }
-      console.log("about to create new game");
+      logger.log("about to create new game");
 
       const newAiGame = await db.gameWithAi.create({
         data: {
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newGame);
   } catch (error) {
-    console.error("Error creating game:", error);
+    logger.error("Error creating game:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

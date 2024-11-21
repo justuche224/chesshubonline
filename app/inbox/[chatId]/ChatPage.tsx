@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontalIcon } from "lucide-react";
@@ -8,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { pusherClient } from "@/lib/pusher";
 import axios from "axios";
 import logger from "@/utils/logger";
-import Link from "next/link";
+import ChatHeader from "./ChatHeader";
 
 interface Message {
   id: string;
@@ -187,25 +186,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
   return (
     <div className="flex flex-col h-[calc(100vh-52px)] max-w-2xl mx-auto">
       {/* Chat Header */}
-      <Link href={`/profile/${otherUser.username}`}>
-        <div className="flex items-center p-4 border-b">
-          <Avatar className="w-10 h-10 mr-3">
-            <AvatarImage
-              src={otherUser.image || undefined}
-              alt={`${otherUser.username}'s avatar`}
-            />
-            <AvatarFallback>
-              {otherUser.username.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="font-semibold">
-              {otherUser.firstname} {otherUser.lastname}
-            </h2>
-            <p className="text-sm text-gray-500">@{otherUser.username}</p>
-          </div>
-        </div>
-      </Link>
+      <ChatHeader otherUser={otherUser} user={user} />
 
       {/* Messages Area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-6">
