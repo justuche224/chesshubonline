@@ -16,10 +16,11 @@ export function AppTopbar() {
   const currentPath = usePathname();
   const isPublicRoute = publicRoutes.includes(currentPath);
   const isAuthPage = authRoutes.includes(currentPath);
+  const isLearnRoute = currentPath.startsWith("/learn");
   const router = useRouter();
   const { pendingCount } = usePendingFriendRequests();
 
-  if (isAuthPage || isPublicRoute) {
+  if (isAuthPage || isPublicRoute || isLearnRoute) {
     return null;
   }
 

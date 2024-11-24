@@ -11,19 +11,21 @@ const PublicNav = () => {
       aria-label="Main navigation"
     >
       <div className="mx-auto px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Image
-            width={40}
-            height={40}
-            src="/images/chesshub.png"
-            alt="ChessHub Logo"
-            className="h-10 w-10 object-contain"
-            priority
-          />
-          <span className="text-xl font-bold text-gray-900 dark:text-white">
-            CHESSHUB
-          </span>
-        </div>
+        <Link href="/">
+          <div className="flex items-center gap-2">
+            <Image
+              width={40}
+              height={40}
+              src="/images/chesshub.png"
+              alt="ChessHub Logo"
+              className="h-10 w-10 object-contain"
+              priority
+            />
+            <span className="text-xl font-bold text-gray-900 dark:text-white">
+              CHESSHUB
+            </span>
+          </div>
+        </Link>
         <div className="flex items-center gap-4">
           <Link title="Start Playing Chess Online" href="/games">
             <Button>
