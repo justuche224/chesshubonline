@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Footer from "@/components/Footer";
 import Image from "next/image";
 import PublicNav from "@/components/PublicNav";
 
@@ -211,7 +210,6 @@ const ContactPage = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </main>
   );
 };

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { ModeToggle } from "@/components/theme-button";
-import { Gamepad } from "lucide-react";
+import { LogIn } from "lucide-react";
 const PublicNav = () => {
   return (
     <nav
@@ -21,16 +21,24 @@ const PublicNav = () => {
               className="h-10 w-10 object-contain"
               priority
             />
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
+            <span className="text-xl font-bold text-gray-900 dark:text-white sr-only sm:not-sr-only">
               CHESSHUB
             </span>
           </div>
         </Link>
         <div className="flex items-center gap-4">
-          <Link title="Start Playing Chess Online" href="/games">
+          <Link href="/quick-play" className="underline">
+            Play
+          </Link>
+          <Link href="/learn" className="underline">
+            Learn
+          </Link>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link title="Start Playing Chess Online" href="/auth/login">
             <Button>
-              <Gamepad className="h-6 w-6" />
-              <span className="sr-only sm:not-sr-only">Start Playing</span>
+              <LogIn className="h-6 w-6" />
+              <span className="sr-only sm:not-sr-only">Login</span>
             </Button>
           </Link>
           <ModeToggle />

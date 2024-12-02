@@ -23,46 +23,25 @@ const Footer = () => {
         {/* Links Section */}
         <h3 className="text-xl font-semibold mb-4">Explore More</h3>
         <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-          <Link
-            href="/games"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/games" className="hover:underline transition-all">
             Play Games
           </Link>
-          <Link
-            href="/friends"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/friends" className="hover:underline transition-all">
             Friends & Matches
           </Link>
-          <Link
-            href="/learn"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/learn" className="hover:underline transition-all">
             Learn Chess
           </Link>
-          <Link
-            href="/about"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/about" className="hover:underline transition-all">
             About Us
           </Link>
-          <Link
-            href="/contact"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/contact" className="hover:underline transition-all">
             Contact Us
           </Link>
-          <Link
-            href="/analytics"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/analytics" className="hover:underline transition-all">
             Analytics
           </Link>
-          <Link
-            href="/blog"
-            className="hover:underline transition-all text-white"
-          >
+          <Link href="/blog" className="hover:underline transition-all">
             Chess Blog
           </Link>
         </div>

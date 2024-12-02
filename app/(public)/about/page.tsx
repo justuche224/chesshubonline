@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import Footer from "@/components/Footer";
 import PublicNav from "@/components/PublicNav";
 
 const AboutPage = () => {
@@ -167,7 +166,6 @@ const AboutPage = () => {
           </Card>
         </div>
       </section>
-      <Footer />
     </main>
   );
 };

@@ -23,8 +23,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { currentUser } from "@/lib/auth";
-import Footer from "@/components/Footer";
-import PublicNav from "@/components/PublicNav";
 
 const LandingPage = async () => {
   const user = await currentUser();
@@ -34,9 +32,6 @@ const LandingPage = async () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-      {/* Navigation */}
-      <PublicNav />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden" aria-label="Hero">
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-50 dark:opacity-30" />
@@ -265,7 +260,6 @@ const LandingPage = async () => {
         </div>
       </section>
       {/* Footer with Internal Links */}
-      <Footer />
     </main>
   );
 };

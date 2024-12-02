@@ -18,6 +18,7 @@ export default auth((req) => {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isLearnRoute = nextUrl.pathname.startsWith("/learn");
+  const isQuickPlayRoute = nextUrl.pathname.startsWith("/quick-play");
 
   // if (pathname === "/") {
   //   return Response.redirect(new URL("/games", nextUrl));
@@ -33,7 +34,7 @@ export default auth((req) => {
     return null;
   }
 
-  if (!isLoggedIn && !isPublicRoute && !isLearnRoute) {
+  if (!isLoggedIn && !isPublicRoute && !isLearnRoute && !isQuickPlayRoute) {
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
   return null;
