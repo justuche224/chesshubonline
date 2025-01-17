@@ -38,16 +38,15 @@ const LandingPage = async () => {
 
         <div className="relative pt-32 pb-20 px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <Badge variant="outline" className="mb-8 animate-fade-in">
+            <Badge variant="outline" className="mb-6 animate-fade-in">
               <Sparkles className="h-3 w-3 mr-1" />
-              New: AI Chess Opponents with Adaptive Learning
+              New: AI Chess Opponents
             </Badge>
 
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="flex-1">
                 <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-                  Play Chess Online in the
-                  <span className="text-primary"> Digital Age</span>
+                  Play Chess Online
                 </h1>
 
                 <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-12 animate-fade-in-up delay-100">
@@ -63,9 +62,11 @@ const LandingPage = async () => {
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                   </Link>
-                  <Button size="lg" variant="outline">
-                    Watch Chess Tutorial
-                  </Button>
+                  <Link href="/learn">
+                    <Button size="lg" variant="outline">
+                      Learn to Play Chess
+                    </Button>
+                  </Link>
                 </div>
               </div>
 

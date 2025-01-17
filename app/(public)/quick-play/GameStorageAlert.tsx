@@ -11,6 +11,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 
 interface GameStorageAlertProps {
   onClose: () => void;
@@ -19,40 +21,52 @@ interface GameStorageAlertProps {
 export default function GameStorageAlert({ onClose }: GameStorageAlertProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const handleClose = () => {
+    if (dontShowAgain) {
+      localStorage.setItem("hideGameStorageAlert", "true");
+    }
+    setIsOpen(false);
+    onClose();
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const shouldHideAlert =
+      localStorage.getItem("hideGameStorageAlert") === "true";
+    if (shouldHideAlert) {
       setIsOpen(false);
       onClose();
-    }, 5000);
+    }
+    setLoading(false);
+
+    const timer = setTimeout(() => {
+      if (dontShowAgain) {
+        localStorage.setItem("hideGameStorageAlert", "true");
+      }
+      setIsOpen(false);
+      onClose();
+    }, 10000);
 
     return () => clearTimeout(timer);
-  }, [onClose]);
+  }, [onClose, dontShowAgain]);
 
-  if (!isOpen) return null;
+  if (loading || !isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50 p-4">
       <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-lg shadow-2xl">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-4 right-4 hover:bg-gray-100 dark:hover:bg-gray-700"
-          onClick={() => {
-            setIsOpen(false);
-            onClose();
-          }}
-        >
-          <X className="h-6 w-6" />
-        </Button>
         <Alert
           variant="destructive"
           className="bg-amber-50 dark:bg-amber-950 border-none shadow-none"
         >
-          <AlertTriangle className="h-5 w-5" />
-          <AlertTitle className="text-amber-900 dark:text-amber-200">
-            Game Storage Information
-          </AlertTitle>
+          <div className="flex items-center justify-center gap-2 text-center">
+            <AlertTriangle className="h-5 w-5" />
+            <AlertTitle className="text-amber-900 dark:text-amber-200 text-xl underline">
+              Game Storage Information
+            </AlertTitle>
+          </div>
           <AlertDescription className="mt-2 text-amber-800 dark:text-amber-300">
             <p className="mb-3">
               Your games are currently stored in your browser&apos;s local
@@ -82,7 +96,7 @@ export default function GameStorageAlert({ onClose }: GameStorageAlertProps) {
                 online multiplayer
               </li>
             </ul>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col justify-center sm:flex-row gap-3">
               <Button
                 variant="default"
                 className="bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800"
@@ -98,6 +112,31 @@ export default function GameStorageAlert({ onClose }: GameStorageAlertProps) {
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
                 View All Account Features
+              </Button>
+            </div>
+            <Separator className="my-4" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="dontShowAgain"
+                  checked={dontShowAgain}
+                  onCheckedChange={(checked) =>
+                    setDontShowAgain(checked as boolean)
+                  }
+                />
+                <label
+                  htmlFor="dontShowAgain"
+                  className="text-sm text-amber-800 dark:text-amber-300 cursor-pointer"
+                >
+                  Don&apos;t show this message again
+                </label>
+              </div>
+              <Button
+                variant="ghost"
+                className="bg-gray-300 hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700"
+                onClick={handleClose}
+              >
+                <X size={20} className="h-10 w-10" /> Close
               </Button>
             </div>
           </AlertDescription>
