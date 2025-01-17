@@ -293,20 +293,20 @@ const ChessGame = () => {
                 className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
               >
                 <Home size={16} />
-                Menu
+                <span className="hidden sm:inline-block">Menu</span>
               </button>
               <button
                 onClick={resetGame}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
               >
                 <RotateCcw size={16} />
-                Reset Game
+                <span className="hidden sm:inline-block">Reset Game</span>
               </button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="aspect-square max-w-2xl mx-auto">
+          <div className="aspect-square max-w-lg mx-auto">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -340,10 +340,10 @@ const ChessGame = () => {
           <div className="mb-4">
             <h3 className="text-sm font-medium mb-2">Status</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="p-2 bg-gray-100 rounded">
+              <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded">
                 In Check: {game.isCheck() ? "Yes" : "No"}
               </div>
-              <div className="p-2 bg-gray-100 rounded">
+              <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded">
                 Moves: {Math.floor(moveHistory.length / 2) + 1}
               </div>
             </div>
