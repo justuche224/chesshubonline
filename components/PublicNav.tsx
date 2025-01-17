@@ -28,10 +28,10 @@ const PublicNav = () => {
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/quick-play" className="underline">
-            Play
+            Quick Play
           </Link>
           <Link href="/learn" className="underline">
-            Learn
+            Learn Chess
           </Link>
         </div>
         <div className="flex items-center gap-4">

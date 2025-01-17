@@ -12,8 +12,8 @@ const Footer = () => {
             Ready to Improve Your Chess Skills?
           </h2>
           <p className="text-lg mb-6">
-            Join thousands of chess enthusiasts! Play games, chat with friends,
-            learn strategies, and master your tactics.
+            Join chess enthusiasts! Play games, chat with friends, learn
+            strategies, and master your tactics.
           </p>
           <Link href="/auth/register">
             <Button>Sign Up for Free</Button>
